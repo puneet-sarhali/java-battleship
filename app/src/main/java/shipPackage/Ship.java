@@ -10,6 +10,15 @@ public class Ship {
     int amount;
     List<ShipParts> components;
 
+    public Ship(Direction direction, String name, ShipCondition condition, int amount, List<ShipParts> components) {
+        this.direction = direction;
+        //this.length = length;
+        this.name = name;
+        this.condition = condition;
+        this.amount = amount;
+        this.components = components;
+    }
+
     private Direction getDirection() {
         return direction;
     }
