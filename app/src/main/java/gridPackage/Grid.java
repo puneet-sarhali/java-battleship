@@ -13,7 +13,7 @@ public class Grid {
         return column;
     }
 
-    private Square getSquare(int r, int c){
+    public Square getSquare(int r, int c){
         return sea[r][c];
     }
 

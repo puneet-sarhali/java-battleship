@@ -12,7 +12,7 @@ public class Square {
     SquareCondition condition;
     ShipParts shipPart;
 
-    private SquareCondition getCondition() {
+    public SquareCondition getCondition() {
         return condition;
     }
 
@@ -20,7 +20,7 @@ public class Square {
         return shipPart;
     }
 
-    private void setCondition(SquareCondition condition) {
+    public void setCondition(SquareCondition condition) {
         this.condition = condition;
     }
 
