@@ -21,7 +21,7 @@ public class imageAdapter extends BaseAdapter {
     public int[] imageArray = new int[]{
             R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,
             R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,
-            R.drawable.ship1,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,
+            R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,
             R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,
             R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,
             R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,
