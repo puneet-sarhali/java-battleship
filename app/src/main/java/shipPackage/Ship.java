@@ -1,8 +1,11 @@
 package shipPackage;
 
+import android.widget.ImageView;
+
 import java.util.List;
 
 public class Ship {
+    int shipImageID;
     Direction direction;
     int length;
     String name;
@@ -10,52 +13,60 @@ public class Ship {
     int amount;
     List<ShipParts> components;
 
-    public Ship(Direction direction, String name, ShipCondition condition, int amount, List<ShipParts> components) {
+    public Ship(String name, ShipCondition condition, int shipImageID) {
         this.direction = direction;
         //this.length = length;
         this.name = name;
         this.condition = condition;
         this.amount = amount;
         this.components = components;
+        this.shipImageID = shipImageID;
     }
 
-    private Direction getDirection() {
+    public void setShipImageID(int id){
+        shipImageID = id;
+    }
+    public int getShipImageID(){
+        return shipImageID;
+    }
+
+    public Direction getDirection() {
         return direction;
     }
 
-    private int getLength() {
+    public int getLength() {
         return length;
     }
 
-    private String getName() {
+    public String getName() {
         return name;
     }
 
-    private ShipCondition getCondition() {
+    public ShipCondition getCondition() {
         return condition;
     }
 
-    private int getAmount() {
+    public int getAmount() {
         return amount;
     }
 
-    private void setDirection(Direction direction) {
+    public void setDirection(Direction direction) {
         this.direction = direction;
     }
 
-    private void setLength(int length) {
+    public void setLength(int length) {
         this.length = length;
     }
 
-    private void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    private void setCondition(ShipCondition condition) {
+    public void setCondition(ShipCondition condition) {
         this.condition = condition;
     }
 
-    private void setAmount(int amount) {
+    public void setAmount(int amount) {
         this.amount = amount;
     }
 

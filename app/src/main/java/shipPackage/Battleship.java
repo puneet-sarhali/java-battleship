@@ -5,8 +5,10 @@ import java.util.List;
 public class Battleship extends Ship{
     private final int battleshipLength = 4;
 
-    public Battleship(Direction direction, String name, ShipCondition condition, int amount, List<ShipParts> components) {
-        super(direction, name, condition, amount, components);
+
+
+    public Battleship(String name, ShipCondition condition, int shipImageID) {
+        super(name, condition, shipImageID);
         this.length = this.battleshipLength;
     }
 }
