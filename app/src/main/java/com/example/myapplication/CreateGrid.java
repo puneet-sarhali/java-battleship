@@ -75,23 +75,45 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
 
                 if(carrierPressed){
                     adapter.setImageArray(position,R.drawable.carrier);
+                    fillAdjacent(position,adapter,5, R.drawable.carrier);
                     gridView.setAdapter(adapter);
                 }else if(battleshipPressed){
                     adapter.setImageArray(position,R.drawable.battleship);
+                    fillAdjacent(position,adapter,4, R.drawable.battleship);
                     gridView.setAdapter(adapter);
                 }else if(cruiserPressed){
                     adapter.setImageArray(position,R.drawable.cruiser);
+                    fillAdjacent(position,adapter,3, R.drawable.cruiser);
                     gridView.setAdapter(adapter);
                 }else if(submarinePressed){
                     adapter.setImageArray(position,R.drawable.submarine);
+                    fillAdjacent(position,adapter,2, R.drawable.submarine);
                     gridView.setAdapter(adapter);
                 }else if(destroyerPressed){
                     adapter.setImageArray(position,R.drawable.destroyer);
+                    fillAdjacent(position,adapter,1, R.drawable.destroyer);
                     gridView.setAdapter(adapter);
                 }
             }
         });
 
+    }
+
+    public void fillAdjacent(int position, imageAdapter adapter, int shipSize, int drawable){
+        if(decodePosition(position)[0] != decodePosition(position+shipSize)[0]){
+            int startIndex = ((decodePosition(position)[0]+1)*8)-1;
+            Log.d("debug", String.valueOf(startIndex));
+            for(int i = startIndex; i>= startIndex - shipSize + 1; i--){
+                adapter.setImageArray(i, drawable);
+                Log.d("current index:", String.valueOf(i));
+            }
+        }
+        else {
+            for (int i = position; i < position + shipSize; i++) {
+                adapter.setImageArray(i, drawable);
+            }
+        }
+        gridView.setAdapter(adapter);
     }
 
 
