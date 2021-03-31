@@ -32,6 +32,8 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
 
     private static final String TAG = "debug";
     GridView gridView;
+    boolean rotated = false;
+    imageAdapter grid = new imageAdapter(this);
     boolean carrierPressed = false, battleshipPressed = false, cruiserPressed = false, submarinePressed = false, destroyerPressed = false;
     int clickCountCarrier = 0, clickCountBattleship = 0, clickCountCruiser = 0,clickCountSubmarine = 0,clickCountDestroyer = 0;
 
@@ -41,7 +43,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
     Submarine submarine = new Submarine("Submarine", ShipCondition.UNDAMAGED,R.id.submarine );
     Destroyer destroyer = new Destroyer("Destroyer", ShipCondition.UNDAMAGED,R.id.destroyer );
 
-    imageAdapter grid = new imageAdapter(this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
         Button cruiserButton = findViewById(cruiser.getShipImageID());
         Button submarineButton = findViewById(submarine.getShipImageID());
         Button destroyerButton = findViewById(destroyer.getShipImageID());
+        Button rotate = findViewById(R.id.rotation);
 
 
 
@@ -69,35 +72,43 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
         cruiserButton.setOnClickListener(this);
         submarineButton.setOnClickListener(this);
         destroyerButton.setOnClickListener(this);
+        rotate.setOnClickListener(this);
 
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-
-                grid.getRow(position);
-
-                if(carrierPressed){
-                    grid.setImageArray(position,R.drawable.carrier);
-                    fillAdjacent(position,grid,carrier.getLength(), R.drawable.carrier);
+                if(carrierPressed && grid.getItemId(position) == R.drawable.water){
+                    fillAdjacent(position,grid,5, R.drawable.carrier);
                     gridView.setAdapter(grid);
-                }else if(battleshipPressed){
-                    grid.setImageArray(position,R.drawable.battleship);
+                    carrierButton.setVisibility(View.GONE);
+                    carrierPressed = false;
+
+                }else if(battleshipPressed && grid.getItemId(position) == R.drawable.water){
                     fillAdjacent(position,grid,4, R.drawable.battleship);
                     gridView.setAdapter(grid);
-                }else if(cruiserPressed){
-                    grid.setImageArray(position,R.drawable.cruiser);
+                    battleshipButton.setVisibility(View.GONE);
+                    battleshipPressed = false;
+
+                }else if(cruiserPressed && grid.getItemId(position) == R.drawable.water){
                     fillAdjacent(position,grid,3, R.drawable.cruiser);
                     gridView.setAdapter(grid);
-                }else if(submarinePressed){
-                    grid.setImageArray(position,R.drawable.submarine);
+                    cruiserButton.setVisibility(View.GONE);
+                    cruiserPressed = false;
+
+                }else if(submarinePressed && grid.getItemId(position) == R.drawable.water){
                     fillAdjacent(position,grid,2, R.drawable.submarine);
                     gridView.setAdapter(grid);
-                }else if(destroyerPressed){
-                    grid.setImageArray(position,R.drawable.destroyer);
+                    submarineButton.setVisibility(View.GONE);
+                    submarinePressed = false;
+
+                }else if(destroyerPressed && grid.getItemId(position) == R.drawable.water){
                     fillAdjacent(position,grid,1, R.drawable.destroyer);
                     gridView.setAdapter(grid);
+                    destroyerButton.setVisibility(View.GONE);
+                    destroyerPressed = false;
+
                 }
 
 
@@ -107,20 +118,42 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
     }
 
     public void fillAdjacent(int position, imageAdapter adapter, int shipSize, int drawable){
-        if(grid.decodePosition(position)[0] != grid.decodePosition(position+shipSize)[0]){
-            int startIndex = ((grid.decodePosition(position)[0]+1)*8)-1;
-            Log.d("debug", String.valueOf(startIndex));
-            for(int i = startIndex; i>= startIndex - shipSize + 1; i--){
-                adapter.setImageArray(i, drawable);
-                Log.d("current index:", String.valueOf(i));
+        //Horitontal ship placement
+        if(!rotated) {
+            if (grid.decodePosition(position)[0] != grid.decodePosition(position + shipSize)[0]) {
+                int startIndex = ((grid.decodePosition(position)[0] + 1) * 8) - 1;
+                Log.d("debug", String.valueOf(startIndex));
+                for (int i = startIndex; i >= startIndex - shipSize + 1; i--) {
+                    adapter.setImageArray(i, drawable);
+                    Log.d("current index:", String.valueOf(i));
+                }
+            } else {
+                for (int i = position; i < position + shipSize; i++) {
+                    adapter.setImageArray(i, drawable);
+                }
             }
         }
+        //Vertical ship placement
         else {
-            for (int i = position; i < position + shipSize; i++) {
-                adapter.setImageArray(i, drawable);
+            if (position + 8*shipSize >= 64) {
+                int startIndex = grid.decodePosition(position)[1] + 56;
+                Log.d("start index:", String.valueOf(startIndex));
+                Log.d("vertical:", "extends to next column");
+                for (int i = startIndex; i > startIndex - shipSize*8; i-=8) {
+                    adapter.setImageArray(i, drawable);
+                    Log.d("current index:", String.valueOf(i));
+                }
+            } else {
+                Log.d("vertical:", "does not extend to next column");
+                for (int i = position; i < position + shipSize*8; i+=8) {
+                    adapter.setImageArray(i, drawable);
+                    Log.d("current index:", String.valueOf(i));
+                }
             }
         }
+
         gridView.setAdapter(adapter);
+
     }
 
 
@@ -128,6 +161,17 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
     //defines the onClick functionality of the ship buttons
     @Override
     public void onClick(View v) {
+        if(v.getId() == R.id.rotation){
+            Button btn = (Button) findViewById(R.id.rotation);
+            if(btn.getText().equals("Horizontal")){
+                rotated = true;
+                btn.setText("Vertical");
+            }else {
+                rotated = false;
+                btn.setText("Horizontal");
+            }
+        }
+
 
         switch (v.getId()){
             case R.id.carrier:
