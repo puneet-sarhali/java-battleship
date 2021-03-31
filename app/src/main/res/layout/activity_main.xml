@@ -1,18 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="@drawable/gamebackground"
+    tools:context=".MainActivity" >
+
+
+    <ImageButton
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:src="@drawable/setting_lines"
+        />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="70pt"
+        android:layout_marginBottom="20pt"
+        android:rotationX="-11"
+        android:text="@string/gameName"
+        android:textColor="#4263f5"
+        android:textSize="50dp"
+        android:textStyle="bold" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <EditText
+        android:id="@+id/edittextID"
+        android:background="#FFFFFF"
+        android:textColor="#000000"
+        android:textColorHint="#000000"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/userName"
+        android:textSize="30dp"
+        android:maxLength="15"
+        />
+
+    <Button
+        android:id="@+id/playButton"
+        android:layout_marginTop="20pt"
+        android:layout_width="wrap_content"
+        android:text="@string/playButtonText"
+        android:textSize="30dp"
+        android:textColor="@color/common_google_signin_btn_text_dark"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#4263f5"
+        />
+
+</LinearLayout>

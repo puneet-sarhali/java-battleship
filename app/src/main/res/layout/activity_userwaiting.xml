@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gamebackground"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".UserwaitingActivity">
+
+    <TextView
+        android:id="@+id/userNameShowID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="10pt"
+        android:textColor="#FFFFFF"
+        android:text="Value"
+        android:textSize="40dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="90pt"
+        android:rotationX="13"
+        android:rotationY="0"
+        android:text="@string/waitingroomText"
+        android:textColor="#708090"
+        android:textSize="50dp" />
+
+
+    <Button
+
+        android:id="@+id/quickMatchBTNID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60pt"
+        android:text="@string/quickmatchtext"
+        android:textSize="30dp" />
+
+
+
+</LinearLayout>
