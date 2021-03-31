@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">My First App</string>
+    <string name="gameName">BATTLESHIP</string>
+    <string name="userName">Enter your name!</string>
+    <string name="playButtonText">PLAY !</string>
+    <string name="carrier">Carrier</string>
+    <string name="battleship">Battleship</string>
+    <string name="cruiser">Cruiser</string>
+    <string name="submarine">Submarine</string>
+    <string name="destroyer">Destroyer</string>
+    <string name="helpText">Draw the ships on the game board!</string>
 </resources>
