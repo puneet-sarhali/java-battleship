@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class CreateGrid extends AppCompatActivity implements View.OnClickListener{
 
 
     GridView gridView;
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imageAdapter adapter = new imageAdapter(this);
         gridView.setAdapter(adapter);
 
-
+        //sets the onclick listener defined for this class.
         carrier.setOnClickListener(this);
         battleship.setOnClickListener(this);
         cruiser.setOnClickListener(this);
@@ -94,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+
+    //desfines the onClick functionality of the ship buttons
     @Override
     public void onClick(View v) {
 
