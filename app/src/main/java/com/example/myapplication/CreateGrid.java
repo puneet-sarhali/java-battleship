@@ -21,7 +21,11 @@ import android.widget.Toast;
 import java.util.Arrays;
 
 import shipPackage.Battleship;
+import shipPackage.Carrier;
+import shipPackage.Cruiser;
+import shipPackage.Destroyer;
 import shipPackage.ShipCondition;
+import shipPackage.Submarine;
 
 public class CreateGrid extends AppCompatActivity implements View.OnClickListener{
 
@@ -31,11 +35,11 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
     boolean carrierPressed = false, battleshipPressed = false, cruiserPressed = false, submarinePressed = false, destroyerPressed = false;
     int clickCountCarrier = 0, clickCountBattleship = 0, clickCountCruiser = 0,clickCountSubmarine = 0,clickCountDestroyer = 0;
 
-    Battleship carrier = new Battleship("Carrier", ShipCondition.UNDAMAGED,R.id.carrier);
+    Carrier carrier = new Carrier("Carrier", ShipCondition.UNDAMAGED,R.id.carrier);
     Battleship battleship = new Battleship("Battleship",ShipCondition.UNDAMAGED, R.id.battleship);
-    Battleship cruiser = new Battleship("Cruiser", ShipCondition.UNDAMAGED,R.id.cruiser );
-    Battleship submarine = new Battleship("Submarine", ShipCondition.UNDAMAGED,R.id.submarine );
-    Battleship destroyer = new Battleship("Destroyer", ShipCondition.UNDAMAGED,R.id.destroyer );
+    Cruiser cruiser = new Cruiser("Cruiser", ShipCondition.UNDAMAGED,R.id.cruiser );
+    Submarine submarine = new Submarine("Submarine", ShipCondition.UNDAMAGED,R.id.submarine );
+    Destroyer destroyer = new Destroyer("Destroyer", ShipCondition.UNDAMAGED,R.id.destroyer );
 
     imageAdapter grid = new imageAdapter(this);
 
@@ -58,6 +62,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
         gridView = findViewById(R.id.grid_view);
         gridView.setAdapter(grid);
 
+        Log.d(TAG, String.valueOf(carrier.getLength()) + "  " + String.valueOf(battleship.getLength()));
         //sets the onclick listener defined for this class.
         carrierButton.setOnClickListener(this);
         battleshipButton.setOnClickListener(this);
@@ -75,7 +80,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
 
                 if(carrierPressed){
                     grid.setImageArray(position,R.drawable.carrier);
-                    fillAdjacent(position,grid,5, R.drawable.carrier);
+                    fillAdjacent(position,grid,carrier.getLength(), R.drawable.carrier);
                     gridView.setAdapter(grid);
                 }else if(battleshipPressed){
                     grid.setImageArray(position,R.drawable.battleship);
