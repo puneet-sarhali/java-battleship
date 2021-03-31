@@ -64,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         // shahmat's code
-        editText=(EditText) findViewById(R.id.edittextID);
-        playButton=(Button) findViewById(R.id.playButton);
+        editText=(EditText) findViewById(R.id.edittext);
+        playButton=(Button) findViewById(R.id.playButton1);
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
