@@ -30,7 +30,7 @@
         android:textStyle="bold" />
 
     <EditText
-        android:id="@+id/edittextID"
+        android:id="@+id/edittext"
         android:background="#FFFFFF"
         android:textColor="#000000"
         android:textColorHint="#000000"
@@ -42,7 +42,7 @@
         />
 
     <Button
-        android:id="@+id/playButton"
+        android:id="@+id/playButton1"
         android:layout_marginTop="20pt"
         android:layout_width="wrap_content"
         android:text="@string/playButtonText"

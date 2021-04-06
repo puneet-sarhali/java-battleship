@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import match.PlayerMatchMaking;
+
 public class UserwaitingActivity extends AppCompatActivity {
 
     Button createRoom;
@@ -35,10 +37,19 @@ public class UserwaitingActivity extends AppCompatActivity {
         quickMatch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // loadingDialog.customDialog();
-                Intent intent=new Intent(v.getContext(), CreateGrid.class);
-                startActivity(intent);
-                finish();
+                PlayerMatchMaking.MatchMadeCallback matchMadeCallback = new PlayerMatchMaking.MatchMadeCallback() {
+                    @Override
+                    public void run(PlayerMatchMaking matchMaking) {
+                        Intent intent=new Intent(v.getContext(), CreateGrid.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                };
+                PlayerMatchMaking matchMaking = PlayerMatchMaking.createInstance("Test",
+                        matchMadeCallback);
+
+                matchMaking.searchMatch();
+                loadingDialog.customDialog();
             }
         });
 

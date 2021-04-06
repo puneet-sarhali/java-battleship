@@ -16,6 +16,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+
 public class MainActivity extends AppCompatActivity {
 
     // shahmat's code
@@ -62,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         // shahmat's code
-        editText=(EditText) findViewById(R.id.edittextID);
-        playButton=(Button) findViewById(R.id.playButton);
+        editText=(EditText) findViewById(R.id.edittext);
+        playButton=(Button) findViewById(R.id.playButton1);
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

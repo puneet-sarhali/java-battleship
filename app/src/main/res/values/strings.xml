@@ -15,4 +15,5 @@
     <string name="submarine">Submarine</string>
     <string name="destroyer">Destroyer</string>
     <string name="helpText">Draw the ships on the game board!</string>
+    <string name="rotate">Horizontal</string>
 </resources>
