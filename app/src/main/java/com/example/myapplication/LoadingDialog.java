@@ -24,6 +24,4 @@ public class LoadingDialog {
         alertDialog=builder.create();
         builder.show();
     }
-
-
 }
