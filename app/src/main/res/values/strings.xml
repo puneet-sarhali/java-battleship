@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="gameName">BATTLESHIP</string>
+    <string name="userName">Name</string>
+    <string name="playButtonText">PLAY !</string>
+    <string name="waitingroomText">Let us play</string>
+    <string name="quickmatchtext">Quick Match</string>
+    <string name="showusernameText">User name:</string>
+    <string name="doneBtnText">Done</string>
+    <string name="joinRoomEditTextHint">Type the room name </string>
+    <string name="createRoomEditTextHint">Type the room name </string>
+    <string name="carrier">Carrier</string>
+    <string name="battleship">Battleship</string>
+    <string name="cruiser">Cruiser</string>
+    <string name="submarine">Submarine</string>
+    <string name="destroyer">Destroyer</string>
+    <string name="helpText">Draw the ships on the game board!</string>
+    <string name="rotate">Horizontal</string>
 </resources>
