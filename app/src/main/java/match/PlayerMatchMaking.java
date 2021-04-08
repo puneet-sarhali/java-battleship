@@ -54,7 +54,6 @@ public class PlayerMatchMaking {
 
     }
 
-
     // parameterized constructor to create the object
     private PlayerMatchMaking(DatabaseReference roomReference, MatchMadeCallback MatchMaking) {
         mRoomReference = roomReference;

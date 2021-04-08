@@ -2,7 +2,6 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.renderscript.Sampler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -50,6 +49,7 @@ public class UserwaitingActivity extends AppCompatActivity {
                     @Override
                     public void run(PlayerMatchMaking matchMaking) {
 
+
                         String auth = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
                         Game.gameReference = matchMaking.mGameLocation;
@@ -63,13 +63,12 @@ public class UserwaitingActivity extends AppCompatActivity {
                         else{
                             Game.player = auth;
                             Game.playerName = userName;
-                            FirebaseDatabase.getInstance().getReference(Game.gameReference).child(Game.host).child("isHost").setValue(false);
+                            FirebaseDatabase.getInstance().getReference(Game.gameReference).child(Game.player).child("isHost").setValue(false);
                         }
 
                         Game game = new Game(matchMaking.mGameLocation, matchMaking.isUserHost(), userName);
                         // create the game and set the game info in the firebase database
-                        game.printGame();
-                        Intent intent=new Intent(v.getContext(), CreateGrid.class);
+                        game.printGame(); Intent intent=new Intent(v.getContext(), CreateGrid.class);
                         startActivity(intent);
                         finish();
                     }
@@ -81,5 +80,6 @@ public class UserwaitingActivity extends AppCompatActivity {
                 loadingDialog.customDialog();
             }
         });
+
     }
 }

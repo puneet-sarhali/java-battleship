@@ -2,6 +2,8 @@ package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +25,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
     GridView gridView;
     boolean rotated = false;
     imageAdapter grid = new imageAdapter(this);
+    int ship_placed = 0;
     boolean carrierPressed = false, battleshipPressed = false, cruiserPressed = false, submarinePressed = false, destroyerPressed = false;
     int clickCountCarrier = 0, clickCountBattleship = 0, clickCountCruiser = 0,clickCountSubmarine = 0,clickCountDestroyer = 0;
 
@@ -71,30 +74,50 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                 if(carrierPressed && grid.getItemId(position) == R.drawable.water){
                     fillAdjacent(position,grid,5, R.drawable.carrier);
                     gridView.setAdapter(grid);
+
+                    ship_placed++;
+                    checkReady();
+
                     carrierButton.setVisibility(View.GONE);
                     carrierPressed = false;
 
                 }else if(battleshipPressed && grid.getItemId(position) == R.drawable.water){
                     fillAdjacent(position,grid,4, R.drawable.battleship);
                     gridView.setAdapter(grid);
+
+                    ship_placed++;
+                    checkReady();
+
                     battleshipButton.setVisibility(View.GONE);
                     battleshipPressed = false;
 
                 }else if(cruiserPressed && grid.getItemId(position) == R.drawable.water){
                     fillAdjacent(position,grid,3, R.drawable.cruiser);
                     gridView.setAdapter(grid);
+
+                    ship_placed++;
+                    checkReady();
+
                     cruiserButton.setVisibility(View.GONE);
                     cruiserPressed = false;
 
                 }else if(submarinePressed && grid.getItemId(position) == R.drawable.water){
                     fillAdjacent(position,grid,2, R.drawable.submarine);
                     gridView.setAdapter(grid);
+
+                    ship_placed++;
+                    checkReady();
+
                     submarineButton.setVisibility(View.GONE);
                     submarinePressed = false;
 
                 }else if(destroyerPressed && grid.getItemId(position) == R.drawable.water){
                     fillAdjacent(position,grid,1, R.drawable.destroyer);
                     gridView.setAdapter(grid);
+
+                    ship_placed++;
+                    checkReady();
+
                     destroyerButton.setVisibility(View.GONE);
                     destroyerPressed = false;
 
@@ -105,6 +128,15 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
         });
 
     }
+
+
+    public void checkReady(){
+        if(ship_placed >= 5){
+            Button btn = (Button) findViewById(R.id.rotation);
+            btn.setText("Ready");
+        }
+    }
+
 
     public void fillAdjacent(int position, imageAdapter adapter, int shipSize, int drawable){
         //Horitontal ship placement
@@ -150,14 +182,22 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
     //defines the onClick functionality of the ship buttons
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.rotation){
-            Button btn = (Button) findViewById(R.id.rotation);
-            if(btn.getText().equals("Horizontal")){
-                rotated = true;
-                btn.setText("Vertical");
-            }else {
-                rotated = false;
-                btn.setText("Horizontal");
+        if(ship_placed>=5){
+            //goto next activity
+            Intent intent=new Intent(CreateGrid.this,Game.class);
+            startActivity(intent);
+            finish();
+        }
+        else{
+            if(v.getId() == R.id.rotation) {
+                Button btn = (Button) findViewById(R.id.rotation);
+                if (btn.getText().equals("Horizontal")) {
+                    rotated = true;
+                    btn.setText("Vertical");
+                } else {
+                    rotated = false;
+                    btn.setText("Horizontal");
+                }
             }
         }
 
