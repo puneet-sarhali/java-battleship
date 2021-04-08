@@ -1,8 +1,5 @@
 package match;
 
-import android.util.Log;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -15,7 +12,7 @@ import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.annotations.Nullable;
 
-import java.util.regex.Matcher;
+import java.util.Random;
 
 // handle the match making process for the player
 public class PlayerMatchMaking {
@@ -30,9 +27,9 @@ public class PlayerMatchMaking {
     }
 
     // constants that will be stored in the database
-    public final static String RANDOM_ROOM = "RANDOM_ROOM/";
-    public final static String ROOM = "ROOM_ID/";
-    public static final String PLAYER_GAME_MOVES = "PLAYER_MOVES/";
+    public final static String RANDOM_ROOM = "/RANDOM_ROOM/";
+    public final static String ROOM = "/WAITING_ROOM_ID/";
+    public static final String PLAYER_GAME_MOVES = "/GAME/";
 
     // reference to the game room
     private DatabaseReference mRoomReference;
@@ -49,6 +46,14 @@ public class PlayerMatchMaking {
     private boolean mIsHost;
     // the callback interface
     private MatchMadeCallback mMatchMade;
+
+    // return a random number string from 0 - 999
+    public static String getRandom(){
+        Random rand = new Random();
+        return String.valueOf(rand.nextInt(1000));
+
+    }
+
 
     // parameterized constructor to create the object
     private PlayerMatchMaking(DatabaseReference roomReference, MatchMadeCallback MatchMaking) {
@@ -101,7 +106,8 @@ public class PlayerMatchMaking {
 
     // the method is used to create an instance of the class
     public static PlayerMatchMaking createInstance(String userRoom, MatchMadeCallback matchMaking) {
-        return new PlayerMatchMaking(FirebaseDatabase.getInstance().getReference((String) (ROOM + userRoom)), matchMaking);
+        String room = ROOM + userRoom;
+        return new PlayerMatchMaking(FirebaseDatabase.getInstance().getReference(room), matchMaking);
     }
     
     // check if the user is host
@@ -267,5 +273,4 @@ public class PlayerMatchMaking {
             }
         }
     }
-
 }
