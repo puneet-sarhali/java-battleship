@@ -80,6 +80,8 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                         checkReady();
                         carrierButton.setVisibility(View.GONE);
                         carrierPressed = false;
+                    }else{
+                        Toast.makeText(CreateGrid.this, "Invalid position, choose a different square", Toast.LENGTH_SHORT).show();
                     }
 
                 }else if(battleshipPressed && grid.getItemId(position) == R.drawable.water){
@@ -90,6 +92,8 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                         checkReady();
                         battleshipButton.setVisibility(View.GONE);
                         battleshipPressed = false;
+                    }else{
+                        Toast.makeText(CreateGrid.this, "Invalid position, choose a different square", Toast.LENGTH_SHORT).show();
                     }
 
 
@@ -101,6 +105,8 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                         checkReady();
                         cruiserButton.setVisibility(View.GONE);
                         cruiserPressed = false;
+                    }else{
+                        Toast.makeText(CreateGrid.this, "Invalid position, choose a different square", Toast.LENGTH_SHORT).show();
                     }
 
                 }else if(submarinePressed && grid.getItemId(position) == R.drawable.water){
@@ -111,6 +117,8 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                         checkReady();
                         submarineButton.setVisibility(View.GONE);
                         submarinePressed = false;
+                    }else{
+                        Toast.makeText(CreateGrid.this, "Invalid position, choose a different square", Toast.LENGTH_SHORT).show();
                     }
 
                 }else if(destroyerPressed && grid.getItemId(position) == R.drawable.water){
@@ -121,6 +129,8 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                         checkReady();
                         destroyerButton.setVisibility(View.GONE);
                         destroyerPressed = false;
+                    }else{
+                        Toast.makeText(CreateGrid.this, "Invalid position, choose a different square", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -139,13 +149,15 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
 
     public boolean fillAdjacent(int position, imageAdapter adapter, int shipSize, int drawable){
         //Horitontal ship placement
+        boolean validPosition = false;
         if(!rotated) {
-            boolean validPosition = false;
+
             if (grid.decodePosition(position)[0] != grid.decodePosition(position + shipSize)[0]) {
                 int startIndex = ((grid.decodePosition(position)[0] + 1) * 8) - 1;
 
+                //checks whether the positions where the ship will be placed is occupied
                 for (int i = startIndex; i >= startIndex - shipSize + 1; i--) {
-                    if(adapter.isOccupied(i)) validPosition = false;
+                    if(adapter.isOccupied(i)) return false;
                     else validPosition = true;
                 }
 
@@ -155,7 +167,6 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                     }
                     return true;
                 }else{
-                    Toast.makeText(this, "Invalid Position", Toast.LENGTH_SHORT).show();
                     return false;
                 }
             } else {
@@ -171,7 +182,6 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                     }
                     return true;
                 }else{
-                    Toast.makeText(this, "Invalid Position", Toast.LENGTH_SHORT).show();
                     return false;
                 }
 
@@ -181,23 +191,42 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
         else {
             if (position + 8*shipSize >= 64) {
                 int startIndex = grid.decodePosition(position)[1] + 56;
-                Log.d("start index:", String.valueOf(startIndex));
-                Log.d("vertical:", "extends to next column");
+
                 for (int i = startIndex; i > startIndex - shipSize*8; i-=8) {
-                    adapter.setImageArray(i, drawable);
-                    Log.d("current index:", String.valueOf(i));
+                    if(adapter.isOccupied(i)) return false;
+                    else validPosition = true;
+                    Log.d("if", String.valueOf(validPosition));
                 }
+
+                if(validPosition){
+                    for (int i = startIndex; i > startIndex - shipSize*8; i-=8) {
+                        adapter.setImageArray(i, drawable);
+                    }
+                    return true;
+                }else{
+                    return false;
+                }
+
+
             } else {
-                Log.d("vertical:", "does not extend to next column");
                 for (int i = position; i < position + shipSize*8; i+=8) {
-                    adapter.setImageArray(i, drawable);
-                    Log.d("current index:", String.valueOf(i));
+                    if(adapter.isOccupied(i)) return false;
+                    else validPosition = true;
+                    Log.d("else", String.valueOf(validPosition));
                 }
+
+                if(validPosition){
+                    for (int i = position; i < position + shipSize*8; i+=8) {
+                        adapter.setImageArray(i, drawable);
+                        Log.d("current index:", String.valueOf(i));
+                    }
+                    return true;
+                }else{
+                    return false;
+                }
+
             }
         }
-
-        gridView.setAdapter(adapter);
-        return true;
 
     }
 
@@ -228,7 +257,6 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
 
         switch (v.getId()){
             case R.id.carrier:
-                Log.d("debug", "onClick: I'm in carrier");
                 if(clickCountCarrier%2 == 0){
                     carrierPressed = true;
                     v.setBackgroundColor(getResources().getColor(R.color.black));
@@ -290,8 +318,6 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                     v.setBackgroundColor(getResources().getColor(R.color.destroyerColour));
                     clickCountDestroyer++;
                 }
-
-
                 break;
 
         }
