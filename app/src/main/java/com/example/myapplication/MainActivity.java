@@ -4,10 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     // shahmat's code
     EditText editText;
     Button playButton;
+    ImageButton settingsButton;
     String value;
 
     private FirebaseAuth mAuth;
@@ -66,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         // shahmat's code
         editText=(EditText) findViewById(R.id.edittext);
         playButton=(Button) findViewById(R.id.playButton1);
+        settingsButton =(ImageButton) findViewById(R.id.settingsButton);
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,6 +85,12 @@ public class MainActivity extends AppCompatActivity {
                     finish();
 
                 }
+            }
+        });
+        settingsButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
             }
         });
 

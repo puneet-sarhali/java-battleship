@@ -3,6 +3,7 @@
     package="com.example.myapplication">
 
     <application
+        android:screenOrientation="sensor"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
