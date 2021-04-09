@@ -12,6 +12,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import static com.example.myapplication.R.drawable.water;
+
 public class imageAdapter extends BaseAdapter {
 
     //this class takes care of all the grid formation for this game
@@ -22,14 +24,14 @@ public class imageAdapter extends BaseAdapter {
     private Context context;
     int arrayLength = 64;
     public int[] imageArray = new int[]{
-            R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,
-            R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,
-            R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,
-            R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,
-            R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,
-            R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,
-            R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,
-            R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,R.drawable.water,
+            water, water, water, water, water, water, water, water,
+            water, water, water, water, water, water, water, water,
+            water, water, water, water, water, water, water, water,
+            water, water, water, water, water, water, water, water,
+            water, water, water, water, water, water, water, water,
+            water, water, water, water, water, water, water, water,
+            water, water, water, water, water, water, water, water,
+            water, water, water, water, water, water, water, water,
 
     };
 
@@ -126,6 +128,12 @@ public class imageAdapter extends BaseAdapter {
     //this functions checks how many ship parts have been drawn on the board
     public boolean checkShipsParts(){
         return true;
+    }
+
+    public boolean isOccupied(int position){
+        if(imageArray[position] != water){
+            return true;
+        }else return false;
     }
 
 
