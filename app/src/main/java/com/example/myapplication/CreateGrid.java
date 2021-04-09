@@ -5,12 +5,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import match.FirebaseGame;
+import match.Ready;
 import shipPackage.Battleship;
 import shipPackage.Carrier;
 import shipPackage.Cruiser;
@@ -28,6 +34,8 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
     int ship_placed = 0;
     boolean carrierPressed = false, battleshipPressed = false, cruiserPressed = false, submarinePressed = false, destroyerPressed = false;
     int clickCountCarrier = 0, clickCountBattleship = 0, clickCountCruiser = 0,clickCountSubmarine = 0,clickCountDestroyer = 0;
+
+    final LoadingDialog loadingDialog=new LoadingDialog(com.example.myapplication.CreateGrid.this);
 
     Carrier carrier = new Carrier("Carrier", ShipCondition.UNDAMAGED,R.id.carrier);
     Battleship battleship = new Battleship("Battleship",ShipCondition.UNDAMAGED, R.id.battleship);
@@ -183,10 +191,26 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
     @Override
     public void onClick(View v) {
         if(ship_placed>=5){
-            //goto next activity
-            Intent intent=new Intent(CreateGrid.this,Game.class);
-            startActivity(intent);
-            finish();
+
+            loadingDialog.customDialog();
+
+            DatabaseReference userReference = FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(FirebaseGame.currentUID).child("isReady");;
+            DatabaseReference opponentReference = FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(FirebaseGame.opponentUID).child("isReady");
+
+
+            Ready ready = new Ready(userReference, opponentReference, new Ready.ReadyMatchComplete() {
+                @Override
+                public void run() {
+                    //goto next activity
+                    Intent intent=new Intent(CreateGrid.this,Game.class);
+                    startActivity(intent);
+                    finish();
+                    FirebaseGame.removeOpponentValueListener();
+                }
+            });
+
+            ready.beReady();
+
         }
         else{
             if(v.getId() == R.id.rotation) {

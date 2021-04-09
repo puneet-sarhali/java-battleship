@@ -205,7 +205,6 @@ public class PlayerMatchMaking {
         @Override
         // call this when the transaction is complete
         public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
-            System.out.println("Initializing match failed");
         }
 
         @Override
