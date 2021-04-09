@@ -8,6 +8,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+
+import match.FirebaseGame;
 import match.PlayerMatchMaking;
 
 public class UserwaitingActivity extends AppCompatActivity {
@@ -40,20 +43,34 @@ public class UserwaitingActivity extends AppCompatActivity {
                 PlayerMatchMaking.MatchMadeCallback matchMadeCallback = new PlayerMatchMaking.MatchMadeCallback() {
                     @Override
                     public void run(PlayerMatchMaking matchMaking) {
+
+
+                        String auth = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                        FirebaseGame.setUserValue(matchMaking.isUserHost(), auth, matchMaking.mGameLocation, userName);
+                        FirebaseGame.setOpponentValue(new FirebaseGame.onCompletion() {
+                            @Override
+                            public void onSuccess() {
+                            }
+
+                            @Override
+                            public void onFailure() {
+                                System.out.println("setOpponentValue failed");
+                            }
+                        });
+
                         Intent intent=new Intent(v.getContext(), CreateGrid.class);
                         startActivity(intent);
                         finish();
                     }
                 };
-                PlayerMatchMaking matchMaking = PlayerMatchMaking.createInstance("Test",
+                PlayerMatchMaking matchMaking = PlayerMatchMaking.createInstance("1234",
                         matchMadeCallback);
 
                 matchMaking.searchMatch();
                 loadingDialog.customDialog();
             }
         });
-
-
 
     }
 }
