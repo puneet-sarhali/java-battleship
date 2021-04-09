@@ -29,41 +29,6 @@ public class FirebaseGrid {
     public boolean[][] currentGrid = new boolean[8][8];
     public boolean[][] opponentGrid = new boolean[8][8];
 
-    // a class that's used to store the location of the square
-    /*public class Location {
-        // the row and column of the square that's been hit
-        private int row;
-        private int column;
-
-        // default constructor
-        public Location() {
-        }
-
-        // parameterized constructor
-        public Location(int row, int column){
-            this.row = row;
-            this.column = column;
-        }
-
-        public int getRow() {
-            return row;
-        }
-
-        public void setRow(int row) {
-            this.row = row;
-        }
-
-        public int getColumn() {
-            return column;
-        }
-
-        public void setColumn(int column) {
-            this.column = column;
-        }
-
-
-    }*/
-
     // default constructor
     public FirebaseGrid(){
         for (int i = 0; i < 8; i++){

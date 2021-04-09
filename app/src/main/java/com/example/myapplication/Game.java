@@ -42,7 +42,7 @@ public class Game extends AppCompatActivity {
 
             @Override
             public void onSuccess(DataSnapshot snapshot) {
-                System.out.println("Current user's move: " + snapshot.getKey());
+                System.out.println("Enemy's grid: " + snapshot.getKey());
             }
 
             @Override
@@ -62,6 +62,5 @@ public class Game extends AppCompatActivity {
                 //game logic
             }
         });
-
     }
 }
