@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import shipPackage.Battleship;
 import shipPackage.Carrier;
@@ -27,6 +28,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
     int ship_placed = 0;
     boolean carrierPressed = false, battleshipPressed = false, cruiserPressed = false, submarinePressed = false, destroyerPressed = false;
     int clickCountCarrier = 0, clickCountBattleship = 0, clickCountCruiser = 0,clickCountSubmarine = 0,clickCountDestroyer = 0;
+
 
     Carrier carrier = new Carrier("Carrier", ShipCondition.UNDAMAGED,R.id.carrier);
     Battleship battleship = new Battleship("Battleship",ShipCondition.UNDAMAGED, R.id.battleship);
@@ -65,51 +67,61 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
         destroyerButton.setOnClickListener(this);
         rotate.setOnClickListener(this);
 
-
+        //places ships on the board
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                boolean imageDrawn = false;
                 if(carrierPressed && grid.getItemId(position) == R.drawable.water){
-                    fillAdjacent(position,grid,5, R.drawable.carrier);
-                    gridView.setAdapter(grid);
-                    ship_placed++;
-                    checkReady();
-                    carrierButton.setVisibility(View.GONE);
-                    carrierPressed = false;
+                    imageDrawn = fillAdjacent(position,grid,5, R.drawable.carrier);
+                    if(imageDrawn){
+                        gridView.setAdapter(grid);
+                        ship_placed++;
+                        checkReady();
+                        carrierButton.setVisibility(View.GONE);
+                        carrierPressed = false;
+                    }
 
                 }else if(battleshipPressed && grid.getItemId(position) == R.drawable.water){
-                    fillAdjacent(position,grid,4, R.drawable.battleship);
-                    gridView.setAdapter(grid);
-                    ship_placed++;
-                    checkReady();
-                    battleshipButton.setVisibility(View.GONE);
-                    battleshipPressed = false;
+                    imageDrawn = fillAdjacent(position,grid,4, R.drawable.battleship);
+                    if(imageDrawn){
+                        gridView.setAdapter(grid);
+                        ship_placed++;
+                        checkReady();
+                        battleshipButton.setVisibility(View.GONE);
+                        battleshipPressed = false;
+                    }
+
 
                 }else if(cruiserPressed && grid.getItemId(position) == R.drawable.water){
-                    fillAdjacent(position,grid,3, R.drawable.cruiser);
-                    gridView.setAdapter(grid);
-                    ship_placed++;
-                    checkReady();
-                    cruiserButton.setVisibility(View.GONE);
-                    cruiserPressed = false;
+                    imageDrawn = fillAdjacent(position,grid,3, R.drawable.cruiser);
+                    if(imageDrawn){
+                        gridView.setAdapter(grid);
+                        ship_placed++;
+                        checkReady();
+                        cruiserButton.setVisibility(View.GONE);
+                        cruiserPressed = false;
+                    }
 
                 }else if(submarinePressed && grid.getItemId(position) == R.drawable.water){
-                    fillAdjacent(position,grid,2, R.drawable.submarine);
-                    gridView.setAdapter(grid);
-                    ship_placed++;
-                    checkReady();
-                    submarineButton.setVisibility(View.GONE);
-                    submarinePressed = false;
+                    imageDrawn = fillAdjacent(position,grid,2, R.drawable.submarine);
+                    if(imageDrawn){
+                        gridView.setAdapter(grid);
+                        ship_placed++;
+                        checkReady();
+                        submarineButton.setVisibility(View.GONE);
+                        submarinePressed = false;
+                    }
 
                 }else if(destroyerPressed && grid.getItemId(position) == R.drawable.water){
-                    fillAdjacent(position,grid,1, R.drawable.destroyer);
-                    gridView.setAdapter(grid);
-                    ship_placed++;
-                    checkReady();
-                    destroyerButton.setVisibility(View.GONE);
-                    destroyerPressed = false;
-
+                    imageDrawn = fillAdjacent(position,grid,1, R.drawable.destroyer);
+                    if(imageDrawn){
+                        gridView.setAdapter(grid);
+                        ship_placed++;
+                        checkReady();
+                        destroyerButton.setVisibility(View.GONE);
+                        destroyerPressed = false;
+                    }
                 }
 
 
@@ -125,20 +137,44 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
         }
     }
 
-    public void fillAdjacent(int position, imageAdapter adapter, int shipSize, int drawable){
+    public boolean fillAdjacent(int position, imageAdapter adapter, int shipSize, int drawable){
         //Horitontal ship placement
         if(!rotated) {
+            boolean validPosition = false;
             if (grid.decodePosition(position)[0] != grid.decodePosition(position + shipSize)[0]) {
                 int startIndex = ((grid.decodePosition(position)[0] + 1) * 8) - 1;
-                Log.d("debug", String.valueOf(startIndex));
+
                 for (int i = startIndex; i >= startIndex - shipSize + 1; i--) {
-                    adapter.setImageArray(i, drawable);
-                    Log.d("current index:", String.valueOf(i));
+                    if(adapter.isOccupied(i)) validPosition = false;
+                    else validPosition = true;
+                }
+
+                if(validPosition){
+                    for (int i = startIndex; i >= startIndex - shipSize + 1; i--) {
+                        adapter.setImageArray(i, drawable);
+                    }
+                    return true;
+                }else{
+                    Toast.makeText(this, "Invalid Position", Toast.LENGTH_SHORT).show();
+                    return false;
                 }
             } else {
+
                 for (int i = position; i < position + shipSize; i++) {
-                    adapter.setImageArray(i, drawable);
+                    if(adapter.isOccupied(i)) validPosition = false;
+                    else validPosition = true;
                 }
+
+                if(validPosition){
+                    for (int i = position; i < position + shipSize; i++) {
+                        adapter.setImageArray(i, drawable);
+                    }
+                    return true;
+                }else{
+                    Toast.makeText(this, "Invalid Position", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+
             }
         }
         //Vertical ship placement
@@ -161,6 +197,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
         }
 
         gridView.setAdapter(adapter);
+        return true;
 
     }
 
