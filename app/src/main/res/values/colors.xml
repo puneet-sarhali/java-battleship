@@ -15,4 +15,6 @@
     <color name="cruiserColour">#FF5722</color>
     <color name="submarineColour">#673AB7</color>
     <color name="destroyerColour">#A1093D</color>
+    <color name="Green">#008000</color>
+
 </resources>

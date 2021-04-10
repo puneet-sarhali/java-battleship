@@ -51,6 +51,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
         Button submarineButton = findViewById(submarine.getShipImageID());
         Button destroyerButton = findViewById(destroyer.getShipImageID());
         Button rotate = findViewById(R.id.rotation);
+        Button reset = findViewById(R.id.reset);
 
 
 
@@ -138,12 +139,23 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
             }
         });
 
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+            }
+        });
+
     }
 
     public void checkReady(){
         if(ship_placed >= 5){
             Button btn = (Button) findViewById(R.id.rotation);
+
             btn.setText("Ready");
+            btn.setBackgroundColor(getResources().getColor(R.color.Green));
         }
     }
 
@@ -172,7 +184,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
             } else {
 
                 for (int i = position; i < position + shipSize; i++) {
-                    if(adapter.isOccupied(i)) validPosition = false;
+                    if(adapter.isOccupied(i))return false;
                     else validPosition = true;
                 }
 
@@ -254,6 +266,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
             }
         }
 
+        //on click functionality of reset button
 
         switch (v.getId()){
             case R.id.carrier:

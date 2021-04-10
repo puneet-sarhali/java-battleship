@@ -21,6 +21,7 @@ public class UserwaitingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_userwaiting);
+        getSupportActionBar().hide();
 
         quickMatch=(Button) findViewById(R.id.quickMatchBTNID);
         textView=(TextView) findViewById(R.id.userNameShowID);
@@ -37,7 +38,13 @@ public class UserwaitingActivity extends AppCompatActivity {
         quickMatch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PlayerMatchMaking.MatchMadeCallback matchMadeCallback = new PlayerMatchMaking.MatchMadeCallback() {
+
+                Intent intent=new Intent(v.getContext(), CreateGrid.class);
+                startActivity(intent);
+                finish();
+                
+                
+                /*PlayerMatchMaking.MatchMadeCallback matchMadeCallback = new PlayerMatchMaking.MatchMadeCallback() {
                     @Override
                     public void run(PlayerMatchMaking matchMaking) {
                         Intent intent=new Intent(v.getContext(), CreateGrid.class);
@@ -49,7 +56,7 @@ public class UserwaitingActivity extends AppCompatActivity {
                         matchMadeCallback);
 
                 matchMaking.searchMatch();
-                loadingDialog.customDialog();
+                loadingDialog.customDialog();*/
             }
         });
 

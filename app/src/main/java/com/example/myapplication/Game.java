@@ -20,6 +20,7 @@ public class Game extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        getSupportActionBar().hide();
 
         //fills the grid view with 64 water png's using image adapter class
         gridView = findViewById(R.id.grid_view_game);
