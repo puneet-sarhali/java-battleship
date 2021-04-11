@@ -184,7 +184,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
             } else {
 
                 for (int i = position; i < position + shipSize; i++) {
-                    if(adapter.isOccupied(i)) validPosition = false;
+                    if(adapter.isOccupied(i)) return false;
                     else validPosition = true;
                 }
 
