@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -264,11 +263,28 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                 public void run() {
                     //goto next activity
                     FirebaseGame.removeOpponentValueListener();
-                    FirebaseGrid.initializeGridInFirebase();
+                    FirebaseGrid.getOpponentGrid(new FirebaseGrid.OnSuccessReadingCallBack() {
+                        @Override
+                        public void onSuccess(int row, int column) {
+                            Intent intent;
 
-                    Intent intent=new Intent(CreateGrid.this,Game.class);
-                    startActivity(intent);
-                    finish();
+                            for (int i = 0; i < 8; i++){
+                                for (int j = 0; j < 8; j++){
+                                    System.out.print(FirebaseGrid.opponentGrid[i][j]);
+                                }
+                                System.out.println();
+                            }
+
+                            if (FirebaseGame.isHost){
+                                intent = new Intent(CreateGrid.this, OpponentGame.class);
+                            } else {
+                                intent = new Intent(CreateGrid.this, UserGame.class);
+                            }
+
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
                 }
             });
 

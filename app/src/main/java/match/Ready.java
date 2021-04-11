@@ -70,6 +70,7 @@ public class Ready {
                         opponentIsReadyReference.runTransaction(mReadyInitializer);
                     }
                 };
+                FirebaseGrid.initializeGridInFirebase();
                 mReadyMatch = new ReadyMatch(opponentNotReady);
                 opponentIsReadyReference.runTransaction(mReadyMatch);
             }

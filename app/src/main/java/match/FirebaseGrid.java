@@ -1,26 +1,21 @@
 package match;
 
-import android.location.Location;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.ArrayList;
-
-import gridPackage.Grid;
+import com.google.firebase.database.ValueEventListener;
 
 public class FirebaseGrid {
-    public interface OnGetChildEventListener{
-        void onStart();
-        void onFinish();
-        void onSuccess(DataSnapshot snapshot);
-        void onFailure();
+    public interface OnSuccessSettingCallBack {
+        void onSuccess(int number);
+    }
+
+    public interface OnSuccessReadingCallBack {
+        void onSuccess(int row, int column);
     }
 
     // a database reference to the user grid and enemy's grid
@@ -65,17 +60,46 @@ public class FirebaseGrid {
         }
     }
 
+    static public void getOpponentGrid(OnSuccessReadingCallBack onSuccessReadingCallBack){
+        String enemyBoard = (FirebaseGame.isHost) ? "playerBoard" : "hostBoard";
+        FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(enemyBoard).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot data1 : snapshot.getChildren()){
+                    int row = Integer.parseInt(data1.getKey().substring(0, 1));
+                    int column = Integer.parseInt(data1.getKey().substring(2, 3));
+                    opponentGrid[row][column] = data1.getValue(Integer.class);
+                    if (FirebaseGame.isHost){
+                        playerGrid[row][column] = opponentGrid[row][column];
+                    } else {
+                        hostGrid[row][column] = opponentGrid[row][column];
+                    }
+                }
+
+                onSuccessReadingCallBack.onSuccess(1, 2);
+                FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(enemyBoard).removeEventListener(this);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                System.out.println("Get opponent's grid failed");
+            }
+        });
+    }
+
     // a setter that sets the player squares that were hit to true into the database
-    static public void setCurrentLocation(int row, int column){
+    static public void setCurrentLocation(int row, int column, OnSuccessSettingCallBack onSuccessSettingCallBack){
         String userBoard = (FirebaseGame.isHost) ? "hostBoard" : "playerBoard";
         String location = row + "_" + column;
 
         if (currentGrid[row][column] == 0){
             currentGrid[row][column] = 1;
             FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(userBoard).child(location).setValue(1);
+            onSuccessSettingCallBack.onSuccess(1);
         } else if (currentGrid[row][column] == 2) {
             currentGrid[row][column] = 3;
             FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(userBoard).child(location).setValue(3);
+            onSuccessSettingCallBack.onSuccess(3);
         }
         if (FirebaseGame.isHost){
             hostGrid[row][column] = currentGrid[row][column];
@@ -85,16 +109,19 @@ public class FirebaseGrid {
     }
 
     // a setter that sets the enemy's squares that were hit to true into the database
-    static public void setOpponentLocation(int row, int column){
+    static public void setOpponentLocation(int row, int column, OnSuccessSettingCallBack onSuccessSettingCallBack){
         String opponentBoard = (FirebaseGame.isHost) ? "playerBoard" : "hostBoard";
         String location = row + "_" + column;
 
         if (opponentGrid[row][column] == 0){
             opponentGrid[row][column] = 1;
             FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(opponentBoard).child(location).setValue(1);
+            onSuccessSettingCallBack.onSuccess(1);
         }
         else if (opponentGrid[row][column] == 2){
+            opponentGrid[row][column] = 3;
             FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(opponentBoard).child(location).setValue(3);
+            onSuccessSettingCallBack.onSuccess(3);
         }
         if (FirebaseGame.isHost){
             playerGrid[row][column] = opponentGrid[row][column];
@@ -104,9 +131,8 @@ public class FirebaseGrid {
     }
 
     // read the current player's data
-    static public void readCurrentLocation(OnGetChildEventListener mOnGetChildEventListener){
-        mOnGetChildEventListener.onStart();
-        String currentUser = (FirebaseGame.isHost) ? "hostMoves" : "playerMoves";
+    static public void readCurrentLocation(OnSuccessReadingCallBack onSuccessReadingCallBack){
+        String currentUser = (FirebaseGame.isHost) ? "hostBoard" : "playerBoard";
         FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(currentUser).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -123,7 +149,7 @@ public class FirebaseGrid {
                 } else {
                     playerGrid[tempRow][tempColumn] = currentGrid[tempRow][tempColumn];
                 }
-                mOnGetChildEventListener.onSuccess(snapshot);
+                onSuccessReadingCallBack.onSuccess(tempRow, tempColumn);
             }
 
             @Override
@@ -136,16 +162,14 @@ public class FirebaseGrid {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                mOnGetChildEventListener.onFailure();
+                System.out.println("readCurrentLocation Failed");
             }
         });
-        mOnGetChildEventListener.onFinish();
     }
 
     // read the opponent's data
-    static public void readOpponentLocation(OnGetChildEventListener mOnGetChildEventListener){
-        mOnGetChildEventListener.onStart();
-        String opponentUser = (FirebaseGame.isHost) ? "playerMoves" : "hostMoves";
+    static public void readOpponentLocation(OnSuccessReadingCallBack onSuccessReadingCallBack){
+        String opponentUser = (FirebaseGame.isHost) ? "playerBoard" : "hostBoard";
         FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(opponentUser).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -156,13 +180,13 @@ public class FirebaseGrid {
                 int tempRow = Integer.parseInt(snapshot.getKey().substring(0, 1));
                 int tempColumn = Integer.parseInt(snapshot.getKey().substring(2, 3));
                 int value = snapshot.getValue(Integer.class).intValue();
-                currentGrid[tempRow][tempColumn] = value;
+                opponentGrid[tempRow][tempColumn] = value;
                 if (FirebaseGame.isHost){
-                    playerGrid[tempRow][tempColumn] = currentGrid[tempRow][tempColumn];
+                    playerGrid[tempRow][tempColumn] = opponentGrid[tempRow][tempColumn];
                 } else {
-                    hostGrid[tempRow][tempColumn] = currentGrid[tempRow][tempColumn];
+                    hostGrid[tempRow][tempColumn] = opponentGrid[tempRow][tempColumn];
                 }
-                mOnGetChildEventListener.onSuccess(snapshot);
+                onSuccessReadingCallBack.onSuccess(tempRow, tempColumn);
             }
 
             @Override
@@ -175,9 +199,34 @@ public class FirebaseGrid {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                mOnGetChildEventListener.onFailure();
+                System.out.println("Read Opponent location failed");
             }
         });
-        mOnGetChildEventListener.onFinish();
+    }
+
+    // check if the user is winning
+    static public boolean isWinning(){
+        boolean winning = true;
+        for (int i = 0; i < 8; i++){
+            for (int j = 0; j < 8; j++){
+                if (opponentGrid[i][j] == 2){
+                    winning = false;
+                }
+            }
+        }
+        return winning;
+    }
+
+    // check if the user is losing
+    static public boolean isLosing(){
+        boolean losing = true;
+        for (int i = 0; i < 8; i++){
+            for (int j = 0; j < 8; j++){
+                if (currentGrid[i][j] == 2){
+                    losing = false;
+                }
+            }
+        }
+        return losing;
     }
 }
