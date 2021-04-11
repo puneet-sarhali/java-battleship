@@ -22,7 +22,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 public class MainActivity extends AppCompatActivity {
 
-    // shahmat's code
+    // Shahmat's code
     EditText editText;
     Button playButton;
     ImageButton settingsButton;
