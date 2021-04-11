@@ -43,6 +43,7 @@ public class Game extends AppCompatActivity {
             @Override
             public void onSuccess(DataSnapshot snapshot) {
                 System.out.println("Enemy's grid: " + snapshot.getKey());
+
             }
 
             @Override

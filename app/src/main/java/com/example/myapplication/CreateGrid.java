@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import match.FirebaseGame;
+import match.FirebaseGrid;
 import match.Ready;
 import shipPackage.Battleship;
 import shipPackage.Carrier;
@@ -175,6 +176,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                 if(validPosition){
                     for (int i = startIndex; i >= startIndex - shipSize + 1; i--) {
                         adapter.setImageArray(i, drawable);
+                        FirebaseGrid.currentGrid[i / 8][i % 8] = 2;
                     }
                     return true;
                 }else{
@@ -190,6 +192,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                 if(validPosition){
                     for (int i = position; i < position + shipSize; i++) {
                         adapter.setImageArray(i, drawable);
+                        FirebaseGrid.currentGrid[i / 8][i % 8] = 2;
                     }
                     return true;
                 }else{
@@ -212,6 +215,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                 if(validPosition){
                     for (int i = startIndex; i > startIndex - shipSize*8; i-=8) {
                         adapter.setImageArray(i, drawable);
+                        FirebaseGrid.currentGrid[i / 8][i % 8] = 2;
                     }
                     return true;
                 }else{
@@ -229,6 +233,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                 if(validPosition){
                     for (int i = position; i < position + shipSize*8; i+=8) {
                         adapter.setImageArray(i, drawable);
+                        FirebaseGrid.currentGrid[i / 8][i % 8] = 2;
                         Log.d("current index:", String.valueOf(i));
                     }
                     return true;
@@ -258,10 +263,12 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                 @Override
                 public void run() {
                     //goto next activity
+                    FirebaseGame.removeOpponentValueListener();
+                    FirebaseGrid.initializeGridInFirebase();
+
                     Intent intent=new Intent(CreateGrid.this,Game.class);
                     startActivity(intent);
                     finish();
-                    FirebaseGame.removeOpponentValueListener();
                 }
             });
 

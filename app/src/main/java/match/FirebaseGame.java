@@ -52,12 +52,6 @@ public class FirebaseGame {
             FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(FirebaseGame.hostUID).child("isHost").setValue(true);
             FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(FirebaseGame.hostUID).child("name").setValue(name);
             FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(FirebaseGame.hostUID).child("isReady").setValue(false);
-            for (int i = 0; i < 8; i++){
-                for (int j = 0; j < 8; j++){
-                    String hostMoves = i + "_" + j;
-                    FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child("hostMoves").child(hostMoves).setValue(false);
-                }
-            }
         }
         else{
             FirebaseGame.playerUID = auth;
@@ -67,12 +61,6 @@ public class FirebaseGame {
             FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(FirebaseGame.playerUID).child("isHost").setValue(false);
             FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(FirebaseGame.playerUID).child("name").setValue(name);
             FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(FirebaseGame.playerUID).child("isReady").setValue(false);
-            for (int i = 0; i < 8; i++){
-                for (int j = 0; j < 8; j++){
-                    String playerMoves = i + "_" + j;
-                    FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child("playerMoves").child(playerMoves).setValue(false);
-                }
-            }
         }
     }
 
