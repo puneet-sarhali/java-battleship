@@ -43,6 +43,26 @@ public class FirebaseGrid {
     public FirebaseGrid(){
     }
 
+    // modify the current local grid
+    static public void setCurrentGrid(int shipSize, int location){
+        if (shipSize == 1){
+            // if the ship is a destroyer
+            FirebaseGrid.currentGrid[location / 8][location % 8] = 1;
+        } else if (shipSize == 2){
+            // if the ship is a submarine
+            FirebaseGrid.currentGrid[location / 8][location % 8] = 2;
+        } else if (shipSize == 3){
+            // if the ship is a cruiser
+            FirebaseGrid.currentGrid[location / 8][location % 8] = 3;
+        } else if (shipSize == 4){
+            // if the ship is a battleship
+            FirebaseGrid.currentGrid[location / 8][location % 8] = 4;
+        } else if (shipSize == 5){
+            // if the ship is a carrier
+            FirebaseGrid.currentGrid[location / 8][location % 8] = 5;
+        }
+    }
+
     // don't call this
     static public void initializeGridInFirebase(){
         String userBoard = (FirebaseGame.isHost) ? "hostBoard" : "playerBoard";
@@ -62,6 +82,7 @@ public class FirebaseGrid {
         }
     }
 
+    // don't call this
     static public void getOpponentGrid(OnSuccessReadingCallBack onSuccessReadingCallBack){
         String enemyBoard = (FirebaseGame.isHost) ? "playerBoard" : "hostBoard";
         FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(enemyBoard).addValueEventListener(new ValueEventListener() {

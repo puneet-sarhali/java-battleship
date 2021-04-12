@@ -156,6 +156,30 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
         }
     }
 
+    // check the position of the grid, i means position
+    public boolean checkPosition(int i, imageAdapter adapter){
+        if(adapter.isOccupied(i)) {
+            return true;
+        } else if (i / 8 >= 1 && adapter.isOccupied(i - 8)) {
+            return true;
+        } else if (i % 8 != 0 && adapter.isOccupied(i - 1)) {
+            return true;
+        } else if (i / 8 < 7 && adapter.isOccupied(i + 8)) {
+            return true;
+        } else if (i % 8 != 7 && adapter.isOccupied(i + 1)) {
+            return true;
+        } else if (i / 8 >= 1 && i % 8 != 0 && adapter.isOccupied(i - 9)) {
+            return true;
+        } else if (i / 8 < 7 && i % 8 != 7 && adapter.isOccupied(i + 9)) {
+            return true;
+        } else if (i / 8 < 7 && i % 8 != 0 && adapter.isOccupied(i + 7)) {
+            return true;
+        } else if (i / 8 >= 1 && i % 8 != 7 && adapter.isOccupied(i - 7)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public boolean fillAdjacent(int position, imageAdapter adapter, int shipSize, int drawable){
 
@@ -168,14 +192,15 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
 
                 //checks whether the positions where the ship will be placed is occupied
                 for (int i = startIndex; i >= startIndex - shipSize + 1; i--) {
-                    if(adapter.isOccupied(i)) return false;
-                    else validPosition = true;
+                    if (checkPosition(i, adapter)){
+                        return false;
+                    } else validPosition = true;
                 }
 
                 if(validPosition){
                     for (int i = startIndex; i >= startIndex - shipSize + 1; i--) {
                         adapter.setImageArray(i, drawable);
-                        FirebaseGrid.currentGrid[i / 8][i % 8] = 2;
+                        FirebaseGrid.setCurrentGrid(shipSize, i);
                     }
                     return true;
                 }else{
@@ -184,8 +209,9 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
             } else {
 
                 for (int i = position; i < position + shipSize; i++) {
-                    if(adapter.isOccupied(i)) return false;
-                    else validPosition = true;
+                    if (checkPosition(i, adapter)){
+                        return false;
+                    } else validPosition = true;
                 }
 
                 if(validPosition){
@@ -206,8 +232,9 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                 int startIndex = grid.decodePosition(position)[1] + 56;
 
                 for (int i = startIndex; i > startIndex - shipSize*8; i-=8) {
-                    if(adapter.isOccupied(i)) return false;
-                    else validPosition = true;
+                    if (checkPosition(i, adapter)){
+                        return false;
+                    } else validPosition = true;
                     Log.d("if", String.valueOf(validPosition));
                 }
 
@@ -224,8 +251,9 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
 
             } else {
                 for (int i = position; i < position + shipSize*8; i+=8) {
-                    if(adapter.isOccupied(i)) return false;
-                    else validPosition = true;
+                    if (checkPosition(i, adapter)){
+                        return false;
+                    } else validPosition = true;
                     Log.d("else", String.valueOf(validPosition));
                 }
 
