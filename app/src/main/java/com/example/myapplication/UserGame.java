@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -27,6 +28,11 @@ public class UserGame extends AppCompatActivity {
         setContentView(R.layout.activity_user_game);
 
         gridView = findViewById(R.id.grid_view_game);
+
+        TextView hitCounter = (TextView) findViewById(R.id.hitCounterUser);
+        TextView missCounter = (TextView) findViewById(R.id.missCounterUser);
+        TextView hitRate = (TextView)findViewById(R.id.hitRateUser);
+
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (FirebaseGrid.currentGrid[i][j] == -1) {
@@ -56,6 +62,10 @@ public class UserGame extends AppCompatActivity {
         }
 
         gridView.setAdapter(grid);
+
+        hitCounter.setText("Hit Counter: " + Analysis.hitCounter);
+        missCounter.setText("Miss Counter: " + Analysis.missCounter);
+        hitRate.setText("Hit Rate: " + Analysis.getHitRate());
 
         button = findViewById(R.id.userButton);
 
@@ -103,6 +113,7 @@ public class UserGame extends AppCompatActivity {
                     FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).
                             child(currentUser).removeEventListener(FirebaseGrid.readCurrentLocationListener);
                 }
+                Analysis.resetCounter();
                 Intent intent = new Intent(UserGame.this, MainActivity.class);
                 startActivity(intent);
                 finish();

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
@@ -36,7 +37,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
     boolean carrierPressed = false, battleshipPressed = false, cruiserPressed = false, submarinePressed = false, destroyerPressed = false;
     int clickCountCarrier = 0, clickCountBattleship = 0, clickCountCruiser = 0,clickCountSubmarine = 0,clickCountDestroyer = 0;
 
-    final LoadingDialog loadingDialog=new LoadingDialog(com.example.myapplication.CreateGrid.this);
+    final CreateGridDialog loadingDialog=new CreateGridDialog(com.example.myapplication.CreateGrid.this);
 
     Carrier carrier = new Carrier("Carrier", ShipCondition.UNDAMAGED,R.id.carrier);
     Battleship battleship = new Battleship("Battleship",ShipCondition.UNDAMAGED, R.id.battleship);
@@ -280,7 +281,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
     public void onClick(View v) {
         if(ship_placed>=5){
 
-            loadingDialog.customDialog(LoadingDialog.CREATEGRID);
+            loadingDialog.customDialog();
             loadingDialog.dismiss();
 
             DatabaseReference userReference = FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(FirebaseGame.currentUID).child("isReady");;

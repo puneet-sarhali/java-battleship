@@ -9,10 +9,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.FirebaseDatabase;
 
+import match.Analysis;
 import match.FirebaseGame;
 import match.FirebaseGrid;
 
@@ -22,10 +24,15 @@ public class OpponentGame extends AppCompatActivity {
     imageAdapter grid = new imageAdapter(this);
     Button button;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+        TextView hitCounter = findViewById(R.id.hitCounterOpponent);
+        TextView missCounter = findViewById(R.id.missCounterOpponent);
+        TextView hitRate = findViewById(R.id.hitRateOpponent);
 
         //fills the grid view with 64 water png's using image adapter class
         gridView = findViewById(R.id.grid_view_game);
@@ -50,6 +57,10 @@ public class OpponentGame extends AppCompatActivity {
 
         gridView.setAdapter(grid);
 
+        hitCounter.setText("Hit Counter: " + Analysis.hitCounter);
+        missCounter.setText("Miss Counter: " + Analysis.missCounter);
+        hitRate.setText("Hit Rate: " + Analysis.getHitRate());
+
         button = findViewById(R.id.opponentButton);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -63,24 +74,53 @@ public class OpponentGame extends AppCompatActivity {
                         if (number == -6) {
                             grid.setImageArray(position, R.drawable.water_error);
                             gridView.setAdapter(grid);
+                            Analysis.missCounter++;
+                            missCounter.setText("Miss Counter: " + Analysis.missCounter);
+                            hitRate.setText("Hit Rate: " + Analysis.getHitRate());
+
                             Intent intent = new Intent(OpponentGame.this, UserGame.class);
                             startActivity(intent);
                             finish();
                         } else {
                             if (number == -1) {
                                 grid.setImageArray(position, R.drawable.destroyer_sunk);
+
+                                Analysis.hitCounter++;
+                                hitCounter.setText("Hit Counter: " + Analysis.hitCounter);
+                                hitRate.setText("Hit Rate: " + Analysis.getHitRate());
+
                                 autofillWaterSunk(1);
                             } else if (number == -2) {
                                 grid.setImageArray(position, R.drawable.submarine_sunk);
+
+                                Analysis.hitCounter++;
+                                hitCounter.setText("Hit Counter: " + Analysis.hitCounter);
+                                hitRate.setText("Hit Rate: " + Analysis.getHitRate());
+
                                 autofillWaterSunk(2);
                             } else if (number == -3) {
                                 grid.setImageArray(position, R.drawable.cruiser_sunk);
+
+                                Analysis.hitCounter++;
+                                hitCounter.setText("Hit Counter: " + Analysis.hitCounter);
+                                hitRate.setText("Hit Rate: " + Analysis.getHitRate());
+
                                 autofillWaterSunk(3);
                             } else if (number == -4) {
                                 grid.setImageArray(position, R.drawable.battleship_sunk);
+
+                                Analysis.hitCounter++;
+                                hitCounter.setText("Hit Counter: " + Analysis.hitCounter);
+                                hitRate.setText("Hit Rate: " + Analysis.getHitRate());
+
                                 autofillWaterSunk(4);
                             } else if (number == -5) {
                                 grid.setImageArray(position, R.drawable.carrier_sunk);
+
+                                Analysis.hitCounter++;
+                                hitCounter.setText("Hit Counter: " + Analysis.hitCounter);
+                                hitRate.setText("Hit Rate: " + Analysis.getHitRate());
+
                                 autofillWaterSunk(5);
                             }
 
@@ -107,6 +147,7 @@ public class OpponentGame extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FirebaseGrid.resetGrid();
+                Analysis.resetCounter();
                 Intent intent = new Intent(OpponentGame.this, MainActivity.class);
                 startActivity(intent);
                 finish();
