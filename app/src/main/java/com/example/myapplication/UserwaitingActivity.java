@@ -70,7 +70,7 @@ public class UserwaitingActivity extends AppCompatActivity {
                         matchMadeCallback);
 
                 matchMaking.searchMatch();
-                loadingDialog.customDialog();
+                loadingDialog.customDialog(LoadingDialog.WAITINGROOM);
             }
         });
 
