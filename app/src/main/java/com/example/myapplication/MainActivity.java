@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         titleText = (TextView) findViewById(R.id.titleText) ;
 
         //Apply settings
+
         try {
             // Get the font size value from SharedPreferences.
             SharedPreferences settings =

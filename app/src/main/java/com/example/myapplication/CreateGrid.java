@@ -59,21 +59,19 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
         setContentView(R.layout.place_ship);
         getSupportActionBar().hide();
 
+
         try {
             // Get the font size value from SharedPreferences.
             SharedPreferences settings =
                     getSharedPreferences("com.example.myapplication", Context.MODE_PRIVATE);
 
-            // Get the font size option.  We use "FONT_SIZE" as the key.
-            // Make sure to use this key when you set the value in SharedPreferences.
-            // We specify "Medium" as the default value, if it does not exist.
+            // Get the font size from sharedpreferences, set default to medium if key invalid
             String fontSizePref = settings.getString("FONT_SIZE", "Medium");
             Log.d("fontpref",fontSizePref);
 
             String rotationPref = settings.getString("AUTO_ROTATE","False");
 
-            // Select the proper theme ID.
-            // These will correspond to your theme names as defined in themes.xml.
+            // Retrieve corresponding scale factor
             float textScale = 1.0f;
             TypedValue outValue = new TypedValue();
             if (fontSizePref == "Small") {
@@ -88,9 +86,10 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
             if(rotationPref == "True"){
                 rotation = true;
             }
+            Log.d("autorotate:",rotationPref);
 
 
-            // Set the theme for the activity.
+            // Apply scale to all objects with texts
 //            Log.d("scale",String.valueOf(textScale));
 //            settingsTitle = (TextView) findViewById(R.id.titleText_settings);
 //            textSize = (TextView) findViewById(R.id.textSize);
