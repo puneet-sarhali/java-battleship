@@ -3,15 +3,16 @@
     package="com.example.myapplication">
 
     <application
-        android:screenOrientation="sensor"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:screenOrientation="sensor"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
+        <activity android:name=".Settings" />
         <activity android:name=".UserGame" />
         <activity android:name=".OpponentGame" />
         <activity android:name=".MainActivity">

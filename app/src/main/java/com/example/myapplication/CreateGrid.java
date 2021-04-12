@@ -3,14 +3,20 @@ package com.example.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.RadioButton;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
@@ -52,6 +58,61 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.place_ship);
         getSupportActionBar().hide();
+
+        try {
+            // Get the font size value from SharedPreferences.
+            SharedPreferences settings =
+                    getSharedPreferences("com.example.myapplication", Context.MODE_PRIVATE);
+
+            // Get the font size option.  We use "FONT_SIZE" as the key.
+            // Make sure to use this key when you set the value in SharedPreferences.
+            // We specify "Medium" as the default value, if it does not exist.
+            String fontSizePref = settings.getString("FONT_SIZE", "Medium");
+            Log.d("fontpref",fontSizePref);
+
+            String rotationPref = settings.getString("AUTO_ROTATE","False");
+
+            // Select the proper theme ID.
+            // These will correspond to your theme names as defined in themes.xml.
+            float textScale = 1.0f;
+            TypedValue outValue = new TypedValue();
+            if (fontSizePref == "Small") {
+                getResources().getValue(R.dimen.FontSizeSmall,outValue,true);
+                textScale = outValue.getFloat();
+            } else if (fontSizePref == "Large") {
+                getResources().getValue(R.dimen.FontSizeLarge,outValue,true);
+                textScale = outValue.getFloat();
+            }
+
+            boolean rotation = false;
+            if(rotationPref == "True"){
+                rotation = true;
+            }
+
+
+            // Set the theme for the activity.
+//            Log.d("scale",String.valueOf(textScale));
+//            settingsTitle = (TextView) findViewById(R.id.titleText_settings);
+//            textSize = (TextView) findViewById(R.id.textSize);
+//            screenRotation = (TextView) findViewById(R.id.screenRotation);
+//            smallButton = (RadioButton) findViewById(R.id.small);
+//            mediumButton = (RadioButton) findViewById(R.id.medium);
+//            largeButton = (RadioButton) findViewById(R.id.large);
+//            settingsTitle.setTextSize(Converter.convertPixelsToDp(settingsTitle.getTextSize(),this)*textScale);
+//            textSize.setTextSize(Converter.convertPixelsToDp(textSize.getTextSize(),this)*textScale);
+//            screenRotation.setTextSize(Converter.convertPixelsToDp(screenRotation.getTextSize(),this)*textScale);
+//            smallButton.setTextSize(Converter.convertPixelsToDp(smallButton.getTextSize(),this)*textScale);
+//            mediumButton.setTextSize(Converter.convertPixelsToDp(mediumButton.getTextSize(),this)*textScale);
+//            largeButton.setTextSize(Converter.convertPixelsToDp(largeButton.getTextSize(),this)*textScale);
+//            Log.d("size",String.valueOf(Converter.convertPixelsToDp(settingsTitle.getTextSize(), this)));
+
+            if(rotation == true){
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
         //initializations of button views
         Button carrierButton = findViewById(carrier.getShipImageID());
