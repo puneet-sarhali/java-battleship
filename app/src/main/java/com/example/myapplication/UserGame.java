@@ -59,8 +59,11 @@ public class UserGame extends AppCompatActivity {
                         Toast.makeText(UserGame.this, "Sorry, you lost", Toast.LENGTH_SHORT).show();
                         button.setVisibility(View.VISIBLE);
                         String currentUser = (FirebaseGame.isHost) ? "hostBoard" : "playerBoard";
-                        FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).
-                                child(currentUser).removeEventListener(FirebaseGrid.readCurrentLocationListener);
+                        if (FirebaseGrid.readCurrentLocationListener != null){
+                            FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).
+                                    child(currentUser).removeEventListener(FirebaseGrid.readCurrentLocationListener);
+                        }
+                        FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).setValue(null);
                     }
                 }
             }
@@ -69,7 +72,7 @@ public class UserGame extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).setValue(null);
+                FirebaseGrid.resetGrid();
                 Intent intent = new Intent(UserGame.this, MainActivity.class);
                 startActivity(intent);
                 finish();

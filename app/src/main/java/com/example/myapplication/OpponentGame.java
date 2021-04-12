@@ -65,9 +65,12 @@ public class OpponentGame extends AppCompatActivity {
                                 Toast.makeText(OpponentGame.this, "Congrats! You win", Toast.LENGTH_SHORT).show();
                                 gridView.setOnItemClickListener(null);
                                 String currentUser = (FirebaseGame.isHost) ? "hostBoard" : "playerBoard";
-                                FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).
-                                        child(currentUser).removeEventListener(FirebaseGrid.readCurrentLocationListener);
                                 button.setVisibility(View.VISIBLE);
+                                if (FirebaseGrid.readCurrentLocationListener != null){
+                                    FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).
+                                            child(currentUser).removeEventListener(FirebaseGrid.readCurrentLocationListener);
+                                }
+                                FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).setValue(null);
                             }
                         }
                     }
@@ -78,7 +81,7 @@ public class OpponentGame extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).setValue(null);
+                FirebaseGrid.resetGrid();
                 Intent intent = new Intent(OpponentGame.this, MainActivity.class);
                 startActivity(intent);
                 finish();
