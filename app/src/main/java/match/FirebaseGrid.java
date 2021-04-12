@@ -11,7 +11,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class FirebaseGrid {
     public interface OnSuccessSettingCallBack {
-        void onSuccess(int number);
+        void onSuccess(int number, int row, int column);
     }
 
     public interface OnSuccessReadingCallBack {
@@ -19,26 +19,49 @@ public class FirebaseGrid {
     }
 
     // a database reference to the user grid and enemy's grid
-    // 0 means empty, 1 means bomb on empty
-    // 2 means ship, 3 means damaged ship
+    // 0 means bomb shreds, 1 means destroyer
+    // 2 means submarine, 3 means cruiser
+    // 4 means battleship, 5 means carrier, 6 means water
     static public int[][] hostGrid = new int[8][8];
     static public int[][] playerGrid = new int[8][8];
     static public int[][] currentGrid = new int[8][8];
     static public int[][] opponentGrid = new int[8][8];
 
+    static public ChildEventListener readCurrentLocationListener;
+
     static {
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
-                currentGrid[i][j] = 0;
-                opponentGrid[i][j] = 0;
-                hostGrid[i][j] = 0;
-                playerGrid[i][j] = 0;
+                currentGrid[i][j] = 6;
+                opponentGrid[i][j] = 6;
+                hostGrid[i][j] = 6;
+                playerGrid[i][j] = 6;
             }
         }
     }
 
     // default constructor
     public FirebaseGrid(){
+    }
+
+    // modify the current local grid
+    static public void setCurrentGrid(int shipSize, int location){
+        if (shipSize == 1){
+            // if the ship is a destroyer
+            FirebaseGrid.currentGrid[location / 8][location % 8] = 1;
+        } else if (shipSize == 2){
+            // if the ship is a submarine
+            FirebaseGrid.currentGrid[location / 8][location % 8] = 2;
+        } else if (shipSize == 3){
+            // if the ship is a cruiser
+            FirebaseGrid.currentGrid[location / 8][location % 8] = 3;
+        } else if (shipSize == 4){
+            // if the ship is a battleship
+            FirebaseGrid.currentGrid[location / 8][location % 8] = 4;
+        } else if (shipSize == 5){
+            // if the ship is a carrier
+            FirebaseGrid.currentGrid[location / 8][location % 8] = 5;
+        }
     }
 
     // don't call this
@@ -60,6 +83,7 @@ public class FirebaseGrid {
         }
     }
 
+    // don't call this
     static public void getOpponentGrid(OnSuccessReadingCallBack onSuccessReadingCallBack){
         String enemyBoard = (FirebaseGame.isHost) ? "playerBoard" : "hostBoard";
         FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(enemyBoard).addValueEventListener(new ValueEventListener() {
@@ -92,15 +116,13 @@ public class FirebaseGrid {
         String userBoard = (FirebaseGame.isHost) ? "hostBoard" : "playerBoard";
         String location = row + "_" + column;
 
-        if (currentGrid[row][column] == 0){
-            currentGrid[row][column] = 1;
-            FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(userBoard).child(location).setValue(1);
-            onSuccessSettingCallBack.onSuccess(1);
-        } else if (currentGrid[row][column] == 2) {
-            currentGrid[row][column] = 3;
-            FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(userBoard).child(location).setValue(3);
-            onSuccessSettingCallBack.onSuccess(3);
+        if (currentGrid[row][column] > 0) {
+            currentGrid[row][column] = -currentGrid[row][column];
+            FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(userBoard).child(location).setValue(currentGrid[row][column]);
+            onSuccessSettingCallBack.onSuccess(currentGrid[row][column], row, column);
         }
+
+
         if (FirebaseGame.isHost){
             hostGrid[row][column] = currentGrid[row][column];
         } else {
@@ -109,20 +131,22 @@ public class FirebaseGrid {
     }
 
     // a setter that sets the enemy's squares that were hit to true into the database
-    static public void setOpponentLocation(int row, int column, OnSuccessSettingCallBack onSuccessSettingCallBack){
+    static public void setOpponentLocation(int row, int column, OnSuccessSettingCallBack onSuccessSettingCallBack, boolean condition){
         String opponentBoard = (FirebaseGame.isHost) ? "playerBoard" : "hostBoard";
         String location = row + "_" + column;
 
-        if (opponentGrid[row][column] == 0){
-            opponentGrid[row][column] = 1;
-            FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(opponentBoard).child(location).setValue(1);
-            onSuccessSettingCallBack.onSuccess(1);
+        if (condition){
+            opponentGrid[row][column] = 0;
+            FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(opponentBoard).child(location).setValue(0);
+            onSuccessSettingCallBack.onSuccess(0, row, column);
+        } else {
+            if (opponentGrid[row][column] > 0) {
+                opponentGrid[row][column] = -opponentGrid[row][column];
+                FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(opponentBoard).child(location).setValue(opponentGrid[row][column]);
+                onSuccessSettingCallBack.onSuccess(opponentGrid[row][column], row, column);
+            }
         }
-        else if (opponentGrid[row][column] == 2){
-            opponentGrid[row][column] = 3;
-            FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(opponentBoard).child(location).setValue(3);
-            onSuccessSettingCallBack.onSuccess(3);
-        }
+
         if (FirebaseGame.isHost){
             playerGrid[row][column] = opponentGrid[row][column];
         } else {
@@ -133,7 +157,8 @@ public class FirebaseGrid {
     // read the current player's data
     static public void readCurrentLocation(OnSuccessReadingCallBack onSuccessReadingCallBack){
         String currentUser = (FirebaseGame.isHost) ? "hostBoard" : "playerBoard";
-        FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(currentUser).addChildEventListener(new ChildEventListener() {
+
+        readCurrentLocationListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
             }
@@ -164,7 +189,9 @@ public class FirebaseGrid {
             public void onCancelled(@NonNull DatabaseError error) {
                 System.out.println("readCurrentLocation Failed");
             }
-        });
+        };
+
+        FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(currentUser).addChildEventListener(readCurrentLocationListener);
     }
 
     // read the opponent's data
@@ -209,7 +236,7 @@ public class FirebaseGrid {
         boolean winning = true;
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
-                if (opponentGrid[i][j] == 2){
+                if (opponentGrid[i][j] == 1 || opponentGrid[i][j] == 2 || opponentGrid[i][j] == 3 || opponentGrid[i][j] == 4 || opponentGrid[i][j] == 5){
                     winning = false;
                 }
             }
@@ -222,11 +249,22 @@ public class FirebaseGrid {
         boolean losing = true;
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
-                if (currentGrid[i][j] == 2){
+                if (currentGrid[i][j] == 1 || currentGrid[i][j] == 2 || currentGrid[i][j] == 3 || currentGrid[i][j] == 4 || currentGrid[i][j] == 5){
                     losing = false;
                 }
             }
         }
         return losing;
+    }
+
+    static public void resetGrid(){
+        for (int i = 0; i < 8; i++){
+            for (int j = 0; j < 8; j++){
+                currentGrid[i][j] = 6;
+                opponentGrid[i][j] = 6;
+                hostGrid[i][j] = 6;
+                playerGrid[i][j] = 6;
+            }
+        }
     }
 }

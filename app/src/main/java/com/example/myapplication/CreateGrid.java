@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
@@ -36,7 +37,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
     boolean carrierPressed = false, battleshipPressed = false, cruiserPressed = false, submarinePressed = false, destroyerPressed = false;
     int clickCountCarrier = 0, clickCountBattleship = 0, clickCountCruiser = 0,clickCountSubmarine = 0,clickCountDestroyer = 0;
 
-    final LoadingDialog loadingDialog=new LoadingDialog(com.example.myapplication.CreateGrid.this);
+    final CreateGridDialog loadingDialog=new CreateGridDialog(com.example.myapplication.CreateGrid.this);
 
     Carrier carrier = new Carrier("Carrier", ShipCondition.UNDAMAGED,R.id.carrier);
     Battleship battleship = new Battleship("Battleship",ShipCondition.UNDAMAGED, R.id.battleship);
@@ -89,7 +90,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                         carrierButton.setVisibility(View.GONE);
                         carrierPressed = false;
                     }else{
-                        Toast.makeText(CreateGrid.this, "Invalid position, choose a different square", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateGrid.this, "Place the ship one tile away from each other.", Toast.LENGTH_SHORT).show();
                     }
 
                 }else if(battleshipPressed && grid.getItemId(position) == R.drawable.water){
@@ -101,7 +102,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                         battleshipButton.setVisibility(View.GONE);
                         battleshipPressed = false;
                     }else{
-                        Toast.makeText(CreateGrid.this, "Invalid position, choose a different square", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateGrid.this, "Place the ship one tile away from each other.", Toast.LENGTH_SHORT).show();
                     }
 
 
@@ -114,7 +115,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                         cruiserButton.setVisibility(View.GONE);
                         cruiserPressed = false;
                     }else{
-                        Toast.makeText(CreateGrid.this, "Invalid position, choose a different square", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateGrid.this, "Place the ship one tile away from each other.", Toast.LENGTH_SHORT).show();
                     }
 
                 }else if(submarinePressed && grid.getItemId(position) == R.drawable.water){
@@ -126,7 +127,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                         submarineButton.setVisibility(View.GONE);
                         submarinePressed = false;
                     }else{
-                        Toast.makeText(CreateGrid.this, "Invalid position, choose a different square", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateGrid.this, "Place the ship one tile away from each other.", Toast.LENGTH_SHORT).show();
                     }
 
                 }else if(destroyerPressed && grid.getItemId(position) == R.drawable.water){
@@ -138,7 +139,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                         destroyerButton.setVisibility(View.GONE);
                         destroyerPressed = false;
                     }else{
-                        Toast.makeText(CreateGrid.this, "Invalid position, choose a different square", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateGrid.this, "Place the ship one tile away from each other.", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -156,6 +157,30 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
         }
     }
 
+    // check the position of the grid, i means position
+    public boolean checkPosition(int i, imageAdapter adapter){
+        if(adapter.isOccupied(i)) {
+            return true;
+        } else if (i / 8 >= 1 && adapter.isOccupied(i - 8)) {
+            return true;
+        } else if (i % 8 != 0 && adapter.isOccupied(i - 1)) {
+            return true;
+        } else if (i / 8 < 7 && adapter.isOccupied(i + 8)) {
+            return true;
+        } else if (i % 8 != 7 && adapter.isOccupied(i + 1)) {
+            return true;
+        } else if (i / 8 >= 1 && i % 8 != 0 && adapter.isOccupied(i - 9)) {
+            return true;
+        } else if (i / 8 < 7 && i % 8 != 7 && adapter.isOccupied(i + 9)) {
+            return true;
+        } else if (i / 8 < 7 && i % 8 != 0 && adapter.isOccupied(i + 7)) {
+            return true;
+        } else if (i / 8 >= 1 && i % 8 != 7 && adapter.isOccupied(i - 7)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public boolean fillAdjacent(int position, imageAdapter adapter, int shipSize, int drawable){
 
@@ -168,14 +193,15 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
 
                 //checks whether the positions where the ship will be placed is occupied
                 for (int i = startIndex; i >= startIndex - shipSize + 1; i--) {
-                    if(adapter.isOccupied(i)) return false;
-                    else validPosition = true;
+                    if (checkPosition(i, adapter)){
+                        return false;
+                    } else validPosition = true;
                 }
 
                 if(validPosition){
                     for (int i = startIndex; i >= startIndex - shipSize + 1; i--) {
                         adapter.setImageArray(i, drawable);
-                        FirebaseGrid.currentGrid[i / 8][i % 8] = 2;
+                        FirebaseGrid.setCurrentGrid(shipSize, i);
                     }
                     return true;
                 }else{
@@ -184,14 +210,15 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
             } else {
 
                 for (int i = position; i < position + shipSize; i++) {
-                    if(adapter.isOccupied(i)) return false;
-                    else validPosition = true;
+                    if (checkPosition(i, adapter)){
+                        return false;
+                    } else validPosition = true;
                 }
 
                 if(validPosition){
                     for (int i = position; i < position + shipSize; i++) {
                         adapter.setImageArray(i, drawable);
-                        FirebaseGrid.currentGrid[i / 8][i % 8] = 2;
+                        FirebaseGrid.setCurrentGrid(shipSize, i);
                     }
                     return true;
                 }else{
@@ -206,15 +233,16 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                 int startIndex = grid.decodePosition(position)[1] + 56;
 
                 for (int i = startIndex; i > startIndex - shipSize*8; i-=8) {
-                    if(adapter.isOccupied(i)) return false;
-                    else validPosition = true;
+                    if (checkPosition(i, adapter)){
+                        return false;
+                    } else validPosition = true;
                     Log.d("if", String.valueOf(validPosition));
                 }
 
                 if(validPosition){
                     for (int i = startIndex; i > startIndex - shipSize*8; i-=8) {
                         adapter.setImageArray(i, drawable);
-                        FirebaseGrid.currentGrid[i / 8][i % 8] = 2;
+                        FirebaseGrid.setCurrentGrid(shipSize, i);
                     }
                     return true;
                 }else{
@@ -224,15 +252,16 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
 
             } else {
                 for (int i = position; i < position + shipSize*8; i+=8) {
-                    if(adapter.isOccupied(i)) return false;
-                    else validPosition = true;
+                    if (checkPosition(i, adapter)){
+                        return false;
+                    } else validPosition = true;
                     Log.d("else", String.valueOf(validPosition));
                 }
 
                 if(validPosition){
                     for (int i = position; i < position + shipSize*8; i+=8) {
                         adapter.setImageArray(i, drawable);
-                        FirebaseGrid.currentGrid[i / 8][i % 8] = 2;
+                        FirebaseGrid.setCurrentGrid(shipSize, i);
                         Log.d("current index:", String.valueOf(i));
                     }
                     return true;
@@ -253,6 +282,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
         if(ship_placed>=5){
 
             loadingDialog.customDialog();
+            loadingDialog.dismiss();
 
             DatabaseReference userReference = FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(FirebaseGame.currentUID).child("isReady");;
             DatabaseReference opponentReference = FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(FirebaseGame.opponentUID).child("isReady");
@@ -262,18 +292,12 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                 @Override
                 public void run() {
                     //goto next activity
+
                     FirebaseGame.removeOpponentValueListener();
                     FirebaseGrid.getOpponentGrid(new FirebaseGrid.OnSuccessReadingCallBack() {
                         @Override
                         public void onSuccess(int row, int column) {
                             Intent intent;
-
-                            for (int i = 0; i < 8; i++){
-                                for (int j = 0; j < 8; j++){
-                                    System.out.print(FirebaseGrid.opponentGrid[i][j]);
-                                }
-                                System.out.println();
-                            }
 
                             if (FirebaseGame.isHost){
                                 intent = new Intent(CreateGrid.this, OpponentGame.class);
@@ -369,7 +393,6 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                     clickCountDestroyer++;
                 }
                 break;
-
         }
     }
 }
