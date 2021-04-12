@@ -253,6 +253,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
         if(ship_placed>=5){
 
             loadingDialog.customDialog();
+            loadingDialog.dismiss();
 
             DatabaseReference userReference = FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(FirebaseGame.currentUID).child("isReady");;
             DatabaseReference opponentReference = FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(FirebaseGame.opponentUID).child("isReady");
@@ -262,6 +263,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                 @Override
                 public void run() {
                     //goto next activity
+
                     FirebaseGame.removeOpponentValueListener();
                     FirebaseGrid.getOpponentGrid(new FirebaseGrid.OnSuccessReadingCallBack() {
                         @Override

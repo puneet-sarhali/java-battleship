@@ -59,6 +59,8 @@ public class UserwaitingActivity extends AppCompatActivity {
                             }
                         });
 
+                        loadingDialog.dismiss();
+
                         Intent intent=new Intent(v.getContext(), CreateGrid.class);
                         startActivity(intent);
                         finish();

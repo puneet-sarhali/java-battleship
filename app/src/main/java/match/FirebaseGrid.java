@@ -26,6 +26,8 @@ public class FirebaseGrid {
     static public int[][] currentGrid = new int[8][8];
     static public int[][] opponentGrid = new int[8][8];
 
+    static public ChildEventListener readCurrentLocationListener;
+
     static {
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
@@ -133,7 +135,8 @@ public class FirebaseGrid {
     // read the current player's data
     static public void readCurrentLocation(OnSuccessReadingCallBack onSuccessReadingCallBack){
         String currentUser = (FirebaseGame.isHost) ? "hostBoard" : "playerBoard";
-        FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(currentUser).addChildEventListener(new ChildEventListener() {
+
+        readCurrentLocationListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
             }
@@ -164,7 +167,9 @@ public class FirebaseGrid {
             public void onCancelled(@NonNull DatabaseError error) {
                 System.out.println("readCurrentLocation Failed");
             }
-        });
+        };
+
+        FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(currentUser).addChildEventListener(readCurrentLocationListener);
     }
 
     // read the opponent's data
