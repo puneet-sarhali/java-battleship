@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                     If user UID is not in the database, create one
                      */
                     if (!condition){
-                        FirebaseDatabase.getInstance().getReference("Name").child(mAuth.getCurrentUser().getUid()).setValue("Name");
+                        FirebaseDatabase.getInstance().getReference("Name").child(currentUser.getUid()).setValue("Name");
                     }
 
                     /*
@@ -130,7 +130,9 @@ public class MainActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                     // set the edit text to the user name under the UID node
-                    editText.setText(snapshot.getValue().toString());
+                    if (snapshot.getValue() != null){
+                        editText.setText(snapshot.getValue().toString());
+                    }
                     // remove the event listener once finish rea
                     FirebaseDatabase.getInstance().getReference("Name").child(currentUser.getUid()).removeEventListener(this);
                 }
