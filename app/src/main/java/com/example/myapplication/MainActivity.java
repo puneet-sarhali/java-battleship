@@ -17,6 +17,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,6 +57,18 @@ public class MainActivity extends AppCompatActivity {
         {
             Toast.makeText(MainActivity.this, "Succeed",
                     Toast.LENGTH_SHORT).show();
+            FirebaseDatabase.getInstance().getReference("Name").child(mAuth.getCurrentUser().getUid()).setValue("Name");
+            FirebaseDatabase.getInstance().getReference("Name").child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    editText.setText(snapshot.getValue().toString());
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
     }
 
@@ -76,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 else {
                     Intent intent=new Intent(MainActivity.this,UserwaitingActivity.class);
                     value = editText.getText().toString(); //to get the name
+                    FirebaseDatabase.getInstance().getReference("Name").child(mAuth.getCurrentUser().getUid()).setValue(value);
                     intent.putExtra("username", value);
                     startActivity(intent);
                     finish();
