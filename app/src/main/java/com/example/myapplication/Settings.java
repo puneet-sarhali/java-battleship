@@ -39,63 +39,36 @@ public class Settings extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         exitButton = (ImageButton) findViewById(R.id.exitButton);
-        try {
-            // Get the font size value from SharedPreferences.
-            SharedPreferences settings =
-                    getSharedPreferences("com.example.myapplication", Context.MODE_PRIVATE);
 
-            // Get the font size from sharedpreferences, set default to medium if key invalid
-            String fontSizePref = settings.getString("FONT_SIZE", "Medium");
-            Log.d("fontpref", fontSizePref);
+        settingsTitle = (TextView) findViewById(R.id.titleText_settings);
+        textSize = (TextView) findViewById(R.id.textSize);
+        screenRotation = (TextView) findViewById(R.id.screenRotation);
+        smallButton = (RadioButton) findViewById(R.id.small);
+        mediumButton = (RadioButton) findViewById(R.id.medium);
+        largeButton = (RadioButton) findViewById(R.id.large);
+        rotateSwitch = (Switch) findViewById(R.id.rotateSwitch);
 
-            String rotationPref = settings.getString("AUTO_ROTATE", "False");
-
-            // Retrieve corresponding scale factor
-            float textScale = 1.0f;
-            TypedValue outValue = new TypedValue();
-            if (fontSizePref.equals("Small")) {
-                getResources().getValue(R.dimen.FontSizeSmall, outValue, true);
-                textScale = outValue.getFloat();
-            } else if (fontSizePref.equals("Large")) {
-                getResources().getValue(R.dimen.FontSizeLarge, outValue, true);
-                textScale = outValue.getFloat();
-            }
-
-            rotateSwitch = (Switch) findViewById(R.id.rotateSwitch);
-            Log.d("rotation",rotationPref);
-            if (rotationPref.equals("True")) {
-                Log.d("switch:","on");
-                rotateSwitch.setChecked(true);
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-            }
-            else{
-                Log.d("switch:","off");
-                rotateSwitch.setChecked(false);
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            }
-
-
-            // Set the theme for the activity.
-            Log.d("scale", String.valueOf(textScale));
-            settingsTitle = (TextView) findViewById(R.id.titleText_settings);
-            textSize = (TextView) findViewById(R.id.textSize);
-            screenRotation = (TextView) findViewById(R.id.screenRotation);
-            smallButton = (RadioButton) findViewById(R.id.small);
-            mediumButton = (RadioButton) findViewById(R.id.medium);
-            largeButton = (RadioButton) findViewById(R.id.large);
-            settingsTitle.setTextSize(Converter.convertPixelsToDp(settingsTitle.getTextSize(), this) * textScale);
-            textSize.setTextSize(Converter.convertPixelsToDp(textSize.getTextSize(), this) * textScale);
-            screenRotation.setTextSize(Converter.convertPixelsToDp(screenRotation.getTextSize(), this) * textScale);
-            smallButton.setTextSize(Converter.convertPixelsToDp(smallButton.getTextSize(), this) * textScale);
-            mediumButton.setTextSize(Converter.convertPixelsToDp(mediumButton.getTextSize(), this) * textScale);
-            largeButton.setTextSize(Converter.convertPixelsToDp(largeButton.getTextSize(), this) * textScale);
-            Log.d("size", String.valueOf(Converter.convertPixelsToDp(settingsTitle.getTextSize(), this)));
-
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        //Apply settings
+        SettingsHelper s = new SettingsHelper(this);
+        //text scale settings
+        settingsTitle.setTextSize(Converter.convertPixelsToDp(settingsTitle.getTextSize(), this) * s.getTextScale());
+        textSize.setTextSize(Converter.convertPixelsToDp(textSize.getTextSize(), this) * s.getTextScale());
+        screenRotation.setTextSize(Converter.convertPixelsToDp(screenRotation.getTextSize(), this) * s.getTextScale());
+        smallButton.setTextSize(Converter.convertPixelsToDp(smallButton.getTextSize(), this) * s.getTextScale());
+        mediumButton.setTextSize(Converter.convertPixelsToDp(mediumButton.getTextSize(), this) * s.getTextScale());
+        largeButton.setTextSize(Converter.convertPixelsToDp(largeButton.getTextSize(), this) * s.getTextScale());
+        Log.d("size", String.valueOf(Converter.convertPixelsToDp(settingsTitle.getTextSize(), this)));
+        //rotation settings
+        if (s.getRotationSetting()) {
+            rotateSwitch.setChecked(true);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            rotateSwitch.setChecked(false);
         }
 
+
+        //Exit settings menu - go back to main page
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,6 +89,7 @@ public class Settings extends AppCompatActivity {
                         RadioButton radioButton = (RadioButton) group.findViewById(checkedId);
                         SharedPreferences sharedPref = getSharedPreferences("com.example.myapplication", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPref.edit();
+                        //Update FONT_SIZE settings inside sharedPreferences depending on user choice
                         if (radioButton.getText().equals("Small")) {
                             Toast.makeText(Settings.this, radioButton.getText(), Toast.LENGTH_SHORT).show();
                             editor.putString("FONT_SIZE", "Small");
@@ -139,10 +113,12 @@ public class Settings extends AppCompatActivity {
                     }
                 });
 
+        //Check if auto rotation switch is on/off
         rotateSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SharedPreferences sharedPref = getSharedPreferences("com.example.myapplication", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
+                //Set the AUTO_ROTATE to corresponding setting inside sharedPreferences
                 if (isChecked) {
                     Toast.makeText(Settings.this, "Auto Rotate:ON", Toast.LENGTH_SHORT).show();
                     editor.putString("AUTO_ROTATE", "True");
@@ -156,8 +132,6 @@ public class Settings extends AppCompatActivity {
             }
         });
     }
-
-
 
 
 }
