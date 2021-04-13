@@ -32,6 +32,8 @@ public class UserGame extends AppCompatActivity {
         TextView hitCounter = (TextView) findViewById(R.id.hitCounterUser);
         TextView missCounter = (TextView) findViewById(R.id.missCounterUser);
         TextView hitRate = (TextView)findViewById(R.id.hitRateUser);
+        TextView infoText = (TextView)findViewById(R.id.infoUser);
+        infoText.setText("Spectating enemy " + FirebaseGame.opponentName + "\'s move");
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -45,7 +47,7 @@ public class UserGame extends AppCompatActivity {
                     grid.setImageArray(j + 8 * i, R.drawable.battleship_sunk);
                 } else if (FirebaseGrid.currentGrid[i][j] == -5) {
                     grid.setImageArray(j + 8 * i, R.drawable.carrier_sunk);
-                } else if (FirebaseGrid.currentGrid[i][j] == -6 || FirebaseGrid.currentGrid[i][j] == 0) {
+                } else if (FirebaseGrid.currentGrid[i][j] == -6) {
                     grid.setImageArray(j + 8 * i, R.drawable.water_sunk);
                 } else if (FirebaseGrid.currentGrid[i][j] == 1) {
                     grid.setImageArray(j + 8 * i, R.drawable.destroyer);
@@ -57,6 +59,8 @@ public class UserGame extends AppCompatActivity {
                     grid.setImageArray(j + 8 * i, R.drawable.battleship);
                 } else if (FirebaseGrid.currentGrid[i][j] == 5) {
                     grid.setImageArray(j + 8 * i, R.drawable.carrier);
+                } else if (FirebaseGrid.currentGrid[i][j] == 0) {
+                    grid.setImageArray(j + 8 * i, R.drawable.ship_parts);
                 }
             }
         }
@@ -90,7 +94,7 @@ public class UserGame extends AppCompatActivity {
                     } else if (FirebaseGrid.currentGrid[row][column] == -5){
                         grid.setImageArray(column + 8 * row, R.drawable.carrier_sunk);
                     } else if (FirebaseGrid.currentGrid[row][column] == 0){
-                        grid.setImageArray(column + 8 * row, R.drawable.water_sunk);
+                        grid.setImageArray(column + 8 * row, R.drawable.ship_parts);
                     }
 
                     gridView.setAdapter(grid);
@@ -98,7 +102,7 @@ public class UserGame extends AppCompatActivity {
                         Toast.makeText(UserGame.this, "Sorry, you lost", Toast.LENGTH_SHORT).show();
                         button.setVisibility(View.VISIBLE);
 
-                        FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).setValue(null);
+
                     }
                 }
             }
@@ -108,6 +112,7 @@ public class UserGame extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FirebaseGrid.resetGrid();
+                FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).setValue(null);
                 String currentUser = (FirebaseGame.isHost) ? "hostBoard" : "playerBoard";
                 if (FirebaseGrid.readCurrentLocationListener != null){
                     FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).
