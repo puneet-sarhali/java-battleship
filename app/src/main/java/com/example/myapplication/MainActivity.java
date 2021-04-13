@@ -130,7 +130,9 @@ public class MainActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                     // set the edit text to the user name under the UID node
-                    editText.setText(snapshot.getValue().toString());
+                    if (snapshot.getValue() != null){
+                        editText.setText(snapshot.getValue().toString());
+                    }
                     // remove the event listener once finish rea
                     FirebaseDatabase.getInstance().getReference("Name").child(currentUser.getUid()).removeEventListener(this);
                 }
@@ -139,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onCancelled(@NonNull DatabaseError error) {
 
                 }
+
             });
         }
     }
