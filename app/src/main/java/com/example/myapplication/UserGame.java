@@ -33,7 +33,9 @@ public class UserGame extends AppCompatActivity {
         TextView missCounter = (TextView) findViewById(R.id.missCounterUser);
         TextView hitRate = (TextView)findViewById(R.id.hitRateUser);
         TextView infoText = (TextView)findViewById(R.id.infoUser);
+        TextView stateText = (TextView)findViewById(R.id.stateInfoUser);
         infoText.setText("Spectating enemy " + FirebaseGame.opponentName + "\'s move");
+        stateText.setText("");
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -79,10 +81,12 @@ public class UserGame extends AppCompatActivity {
                 if (FirebaseGrid.currentGrid[row][column] == -6){
                     grid.setImageArray(column + 8 * row, R.drawable.water_sunk);
                     gridView.setAdapter(grid);
+                    stateText.setText("Enemy missed");
                     Intent intent = new Intent(UserGame.this, OpponentGame.class);
                     startActivity(intent);
                     finish();
                 } else {
+                    stateText.setText("Enemy has hit your ship");
                     if (FirebaseGrid.currentGrid[row][column] == -1){
                         grid.setImageArray(column + 8 * row, R.drawable.destroyer_sunk);
                     } else if (FirebaseGrid.currentGrid[row][column] == -2){
@@ -95,11 +99,12 @@ public class UserGame extends AppCompatActivity {
                         grid.setImageArray(column + 8 * row, R.drawable.carrier_sunk);
                     } else if (FirebaseGrid.currentGrid[row][column] == 0){
                         grid.setImageArray(column + 8 * row, R.drawable.ship_parts);
+                        stateText.setText("Your ship has been destroyed");
                     }
 
                     gridView.setAdapter(grid);
                     if (FirebaseGrid.isLosing()){
-                        Toast.makeText(UserGame.this, "Sorry, you lost", Toast.LENGTH_SHORT).show();
+                        stateText.setText("Sorry, you lost");
                         button.setVisibility(View.VISIBLE);
 
 

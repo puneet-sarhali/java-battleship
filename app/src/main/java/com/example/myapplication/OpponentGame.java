@@ -23,6 +23,7 @@ public class OpponentGame extends AppCompatActivity {
     GridView gridView;
     imageAdapter grid = new imageAdapter(this);
     Button button;
+    TextView stateText;
 
 
     @Override
@@ -34,7 +35,9 @@ public class OpponentGame extends AppCompatActivity {
         TextView missCounter = findViewById(R.id.missCounterOpponent);
         TextView hitRate = findViewById(R.id.hitRateOpponent);
         TextView infoText = findViewById(R.id.infoOpponent);
+        stateText = findViewById(R.id.stateInfoOpponent);
         infoText.setText("Attacking on opponent " + FirebaseGame.opponentName + "\'s grid");
+        stateText.setText("");
 
         //fills the grid view with 64 water png's using image adapter class
         gridView = findViewById(R.id.grid_view_game);
@@ -79,7 +82,7 @@ public class OpponentGame extends AppCompatActivity {
                             grid.setImageArray(position, R.drawable.water_error);
                             gridView.setAdapter(grid);
 
-                            Toast.makeText(OpponentGame.this, "miss", Toast.LENGTH_SHORT).show();
+                            stateText.setText("miss");
 
                             Analysis.missCounter++;
                             missCounter.setText("Miss Counter: " + Analysis.missCounter);
@@ -89,7 +92,7 @@ public class OpponentGame extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         } else {
-                            Toast.makeText(OpponentGame.this, "hit", Toast.LENGTH_SHORT).show();
+                            stateText.setText("hit");
                             if (number == -1) {
                                 grid.setImageArray(position, R.drawable.destroyer_sunk);
 
@@ -135,7 +138,7 @@ public class OpponentGame extends AppCompatActivity {
                             gridView.setAdapter(grid);
 
                             if (FirebaseGrid.isWinning()) {
-                                Toast.makeText(OpponentGame.this, "Congrats! You win", Toast.LENGTH_SHORT).show();
+                                stateText.setText("Congrats! You win");
                                 gridView.setOnItemClickListener(null);
                                 button.setVisibility(View.VISIBLE);
 
@@ -179,8 +182,8 @@ public class OpponentGame extends AppCompatActivity {
         }
 
         if (condition){
+            stateText.setText("Destroying enemy ships");
 
-            Toast.makeText(this, "Destroying enemy ship", Toast.LENGTH_SHORT).show();
             for (int i = 0; i < 8; i++){
                 for (int j = 0; j < 8; j++){
                     if(FirebaseGrid.opponentGrid[i][j] == -ship) {
