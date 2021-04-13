@@ -26,6 +26,7 @@ public class UserGame extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_game);
+        getSupportActionBar().hide();
 
         gridView = findViewById(R.id.grid_view_game);
 

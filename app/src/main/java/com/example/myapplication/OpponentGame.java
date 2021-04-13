@@ -29,6 +29,7 @@ public class OpponentGame extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        getSupportActionBar().hide();
 
         TextView hitCounter = findViewById(R.id.hitCounterOpponent);
         TextView missCounter = findViewById(R.id.missCounterOpponent);
