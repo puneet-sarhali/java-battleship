@@ -33,6 +33,8 @@ public class OpponentGame extends AppCompatActivity {
         TextView hitCounter = findViewById(R.id.hitCounterOpponent);
         TextView missCounter = findViewById(R.id.missCounterOpponent);
         TextView hitRate = findViewById(R.id.hitRateOpponent);
+        TextView infoText = findViewById(R.id.infoOpponent);
+        infoText.setText("Attacking on opponent " + FirebaseGame.opponentName + "\'s grid");
 
         //fills the grid view with 64 water png's using image adapter class
         gridView = findViewById(R.id.grid_view_game);
@@ -49,8 +51,10 @@ public class OpponentGame extends AppCompatActivity {
                     grid.setImageArray(j + 8 * i, R.drawable.battleship_sunk);
                 } else if (FirebaseGrid.opponentGrid[i][j] == -5) {
                     grid.setImageArray(j + 8 * i, R.drawable.carrier_sunk);
-                } else if (FirebaseGrid.opponentGrid[i][j] == -6 || FirebaseGrid.opponentGrid[i][j] == 0) {
+                } else if (FirebaseGrid.opponentGrid[i][j] == -6) {
                     grid.setImageArray(j + 8 * i, R.drawable.water_sunk);
+                } else if (FirebaseGrid.opponentGrid[i][j] == 0) {
+                    grid.setImageArray(j + 8 * i, R.drawable.ship_parts);
                 }
             }
         }
@@ -74,6 +78,9 @@ public class OpponentGame extends AppCompatActivity {
                         if (number == -6) {
                             grid.setImageArray(position, R.drawable.water_error);
                             gridView.setAdapter(grid);
+
+                            Toast.makeText(OpponentGame.this, "miss", Toast.LENGTH_SHORT).show();
+
                             Analysis.missCounter++;
                             missCounter.setText("Miss Counter: " + Analysis.missCounter);
                             hitRate.setText("Hit Rate: " + Analysis.getHitRate());
@@ -82,6 +89,7 @@ public class OpponentGame extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         } else {
+                            Toast.makeText(OpponentGame.this, "hit", Toast.LENGTH_SHORT).show();
                             if (number == -1) {
                                 grid.setImageArray(position, R.drawable.destroyer_sunk);
 
@@ -129,13 +137,9 @@ public class OpponentGame extends AppCompatActivity {
                             if (FirebaseGrid.isWinning()) {
                                 Toast.makeText(OpponentGame.this, "Congrats! You win", Toast.LENGTH_SHORT).show();
                                 gridView.setOnItemClickListener(null);
-                                String currentUser = (FirebaseGame.isHost) ? "hostBoard" : "playerBoard";
                                 button.setVisibility(View.VISIBLE);
-                                if (FirebaseGrid.readCurrentLocationListener != null){
-                                    FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).
-                                            child(currentUser).removeEventListener(FirebaseGrid.readCurrentLocationListener);
-                                }
-                                FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).setValue(null);
+
+
                             }
                         }
                     }
@@ -146,6 +150,14 @@ public class OpponentGame extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String currentUser = (FirebaseGame.isHost) ? "hostBoard" : "playerBoard";
+                if (FirebaseGrid.readCurrentLocationListener != null){
+                    FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).
+                            child(currentUser).removeEventListener(FirebaseGrid.readCurrentLocationListener);
+                }
+
+                FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).setValue(null);
+
                 FirebaseGrid.resetGrid();
                 Analysis.resetCounter();
                 Intent intent = new Intent(OpponentGame.this, MainActivity.class);
@@ -168,6 +180,7 @@ public class OpponentGame extends AppCompatActivity {
 
         if (condition){
 
+            Toast.makeText(this, "Destroying enemy ship", Toast.LENGTH_SHORT).show();
             for (int i = 0; i < 8; i++){
                 for (int j = 0; j < 8; j++){
                     if(FirebaseGrid.opponentGrid[i][j] == -ship) {
@@ -175,33 +188,33 @@ public class OpponentGame extends AppCompatActivity {
                         FirebaseGrid.OnSuccessSettingCallBack onSuccessSettingCallBack = new FirebaseGrid.OnSuccessSettingCallBack() {
                             @Override
                             public void onSuccess(int number, int row, int column) {
-                                grid.setImageArray(row * 8 + column , R.drawable.water_sunk);
+                                grid.setImageArray(row * 8 + column , R.drawable.ship_parts);
                                 gridView.setAdapter(grid);
                             }
                         };
 
-                        if (i != 0 && FirebaseGrid.opponentGrid[i - 1][j] == 6) {
+                        if (i != 0 && (FirebaseGrid.opponentGrid[i - 1][j] == 6 || FirebaseGrid.opponentGrid[i - 1][j] == -6)){
                             FirebaseGrid.setOpponentLocation(i - 1, j, onSuccessSettingCallBack, true);
                         }
-                        if (i != 7 && FirebaseGrid.opponentGrid[i + 1][j] == 6) {
+                        if (i != 7 && (FirebaseGrid.opponentGrid[i + 1][j] == 6 || FirebaseGrid.opponentGrid[i + 1][j] == -6)) {
                             FirebaseGrid.setOpponentLocation(i + 1, j, onSuccessSettingCallBack, true);
                         }
-                        if (j != 0 && FirebaseGrid.opponentGrid[i][j - 1] == 6) {
+                        if (j != 0 && (FirebaseGrid.opponentGrid[i][j - 1] == 6 || FirebaseGrid.opponentGrid[i][j - 1] == -6)) {
                             FirebaseGrid.setOpponentLocation(i, j - 1, onSuccessSettingCallBack, true);
                         }
-                        if (j != 7 && FirebaseGrid.opponentGrid[i][j + 1] == 6) {
+                        if (j != 7 && (FirebaseGrid.opponentGrid[i][j + 1] == 6 || FirebaseGrid.opponentGrid[i][j + 1] == -6)) {
                             FirebaseGrid.setOpponentLocation(i, j + 1, onSuccessSettingCallBack, true);
                         }
-                        if (i != 7 && j != 7 && FirebaseGrid.opponentGrid[i + 1][j + 1] == 6) {
+                        if (i != 7 && j != 7 && (FirebaseGrid.opponentGrid[i + 1][j + 1] == 6 || FirebaseGrid.opponentGrid[i + 1][j + 1] == -6)) {
                             FirebaseGrid.setOpponentLocation(i + 1, j + 1, onSuccessSettingCallBack, true);
                         }
-                        if (i != 0 && j != 7 && FirebaseGrid.opponentGrid[i - 1][j + 1] == 6) {
+                        if (i != 0 && j != 7 && (FirebaseGrid.opponentGrid[i - 1][j + 1] == 6 || FirebaseGrid.opponentGrid[i - 1][j + 1] == -6)) {
                             FirebaseGrid.setOpponentLocation(i - 1, j + 1, onSuccessSettingCallBack, true);
                         }
-                        if (i != 0 && j != 0 && FirebaseGrid.opponentGrid[i - 1][j - 1] == 6) {
+                        if (i != 0 && j != 0 && (FirebaseGrid.opponentGrid[i - 1][j - 1] == 6 || FirebaseGrid.opponentGrid[i - 1][j - 1] == -6)) {
                             FirebaseGrid.setOpponentLocation(i - 1, j - 1, onSuccessSettingCallBack, true);
                         }
-                        if (i != 7 && j != 0 && FirebaseGrid.opponentGrid[i + 1][j - 1] == 6) {
+                        if (i != 7 && j != 0 && (FirebaseGrid.opponentGrid[i + 1][j - 1] == 6 || FirebaseGrid.opponentGrid[i + 1][j - 1] == -6)) {
                             FirebaseGrid.setOpponentLocation(i + 1, j - 1, onSuccessSettingCallBack, true);
                         }
                     }
