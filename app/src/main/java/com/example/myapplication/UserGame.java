@@ -26,6 +26,7 @@ public class UserGame extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_game);
+        getSupportActionBar().hide();
 
         gridView = findViewById(R.id.grid_view_game);
 
@@ -69,9 +70,9 @@ public class UserGame extends AppCompatActivity {
 
         gridView.setAdapter(grid);
 
-        hitCounter.setText("Hit Counter: " + Analysis.hitCounter);
-        missCounter.setText("Miss Counter: " + Analysis.missCounter);
-        hitRate.setText("Hit Rate: " + Analysis.getHitRate());
+        hitCounter.setText(getString(R.string.hit) + Analysis.hitCounter);
+        missCounter.setText(getString(R.string.miss) + Analysis.missCounter);
+        hitRate.setText(getString(R.string.hit_rate) + Analysis.getHitRate());
 
         button = findViewById(R.id.userButton);
 

@@ -1,7 +1,9 @@
 package com.example.myapplication;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.media.Image;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +20,24 @@ public class imageAdapter extends BaseAdapter {
 
     //this class takes care of all the grid formation for this game
 
+
+    public static int getScreenWidth() {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
+
+    public static int getScreenHeight() {
+        return Resources.getSystem().getDisplayMetrics().heightPixels;
+    }
+
+
+
     int row;
     int col;
     int row_col[];
     private Context context;
     int arrayLength = 64;
+
+    //creates a grid with 64 png images as background
     public int[] imageArray = new int[]{
             water, water, water, water, water, water, water, water,
             water, water, water, water, water, water, water, water,
@@ -54,6 +69,7 @@ public class imageAdapter extends BaseAdapter {
         return col;
     }
 
+    //changing the image in the array
     public void setImageArray(int position, int id){
         imageArray[position]= id;
     }
@@ -78,13 +94,14 @@ public class imageAdapter extends BaseAdapter {
         return imageArray[position];
     }
 
+    //creates the grid view
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         //imageArray = fillArray();
         ImageView imageView = new ImageView(context);
         imageView.setImageResource(imageArray[position]);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageView.setLayoutParams(new GridView.LayoutParams(120,120));
+        imageView.setLayoutParams(new GridView.LayoutParams((int) (getScreenWidth()/9), (int) (getScreenWidth()/9)));
 
         return imageView;
     }

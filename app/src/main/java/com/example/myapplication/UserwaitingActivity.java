@@ -24,6 +24,7 @@ public class UserwaitingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_userwaiting);
+        getSupportActionBar().hide();
 
         quickMatch=(Button) findViewById(R.id.quickMatchBTNID);
         textView=(TextView) findViewById(R.id.userNameShowID);
@@ -32,7 +33,7 @@ public class UserwaitingActivity extends AppCompatActivity {
 
         String name=bundle.getString("username");
         String userName=name;
-        textView.setText("Username: "+name);
+        textView.setText("Hi "+name);
 
         final LoadingDialog loadingDialog=new LoadingDialog(com.example.myapplication.UserwaitingActivity.this);
 
