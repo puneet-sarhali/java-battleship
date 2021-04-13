@@ -4,14 +4,20 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.RadioButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +45,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
     boolean carrierPressed = false, battleshipPressed = false, cruiserPressed = false, submarinePressed = false, destroyerPressed = false;
     int clickCountCarrier = 0, clickCountBattleship = 0, clickCountCruiser = 0,clickCountSubmarine = 0,clickCountDestroyer = 0;
 
-    final CreateGridDialog loadingDialog=new CreateGridDialog(com.example.myapplication.CreateGrid.this);
+    final LoadingDialog loadingDialog=new LoadingDialog(com.example.myapplication.CreateGrid.this);
 
     //instances of the ships
     Carrier carrier = new Carrier("Carrier", ShipCondition.UNDAMAGED,R.id.carrier);
@@ -56,13 +62,33 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
         setContentView(R.layout.place_ship);
         getSupportActionBar().hide();
 
-        //initializations of button views
+
+
+        //initializations of button and text views
         Button carrierButton = findViewById(carrier.getShipImageID());
         Button battleshipButton = findViewById(battleship.getShipImageID());
         Button cruiserButton = findViewById(cruiser.getShipImageID());
         Button submarineButton = findViewById(submarine.getShipImageID());
         Button destroyerButton = findViewById(destroyer.getShipImageID());
         Button rotate = findViewById(R.id.rotation);
+        TextView helpText = findViewById(R.id.helpText);
+
+        //Apply settings
+        SettingsHelper s = new SettingsHelper(this);
+        //text scale settings
+        carrierButton.setTextSize(Converter.convertPixelsToDp(carrierButton.getTextSize(),this)*s.getTextScale());
+        battleshipButton.setTextSize(Converter.convertPixelsToDp(battleshipButton.getTextSize(),this)*s.getTextScale());
+        cruiserButton.setTextSize(Converter.convertPixelsToDp(cruiserButton.getTextSize(),this)*s.getTextScale());
+        submarineButton.setTextSize(Converter.convertPixelsToDp(submarineButton.getTextSize(),this)*s.getTextScale());
+        destroyerButton.setTextSize(Converter.convertPixelsToDp(destroyerButton.getTextSize(),this)*s.getTextScale());
+        rotate.setTextSize(Converter.convertPixelsToDp(rotate.getTextSize(),this)*s.getTextScale());
+        helpText.setTextSize(Converter.convertPixelsToDp(rotate.getTextSize(),this)*s.getTextScale());
+        //rotation settings
+        if(s.getRotationSetting()){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+        }else{
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
 
 
 

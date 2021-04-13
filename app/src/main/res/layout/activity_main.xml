@@ -12,6 +12,7 @@
 
     <ImageButton
 
+        android:id="@+id/exitButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
@@ -20,9 +21,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="70pt"
+        android:layout_marginBottom="20pt"
+        android:rotationX="-11"
         android:text="@string/gameName"
         android:textColor="#457B9D"
         android:textSize="50dp"
