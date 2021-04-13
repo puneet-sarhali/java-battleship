@@ -58,9 +58,9 @@ public class OpponentGame extends AppCompatActivity {
 
         gridView.setAdapter(grid);
 
-        hitCounter.setText("Hit Counter: " + Analysis.hitCounter);
-        missCounter.setText("Miss Counter: " + Analysis.missCounter);
-        hitRate.setText("Hit Rate: " + Analysis.getHitRate());
+        hitCounter.setText(getString(R.string.hit) + Analysis.hitCounter);
+        missCounter.setText(getString(R.string.miss)+ Analysis.missCounter);
+        hitRate.setText(getString(R.string.hit_rate) + Analysis.getHitRate());
 
         button = findViewById(R.id.opponentButton);
 
@@ -76,8 +76,8 @@ public class OpponentGame extends AppCompatActivity {
                             grid.setImageArray(position, R.drawable.water_error);
                             gridView.setAdapter(grid);
                             Analysis.missCounter++;
-                            missCounter.setText("Miss Counter: " + Analysis.missCounter);
-                            hitRate.setText("Hit Rate: " + Analysis.getHitRate());
+                            missCounter.setText(getString(R.string.miss) + Analysis.missCounter);
+                            hitRate.setText(getString(R.string.hit_rate) + Analysis.getHitRate());
 
                             Intent intent = new Intent(OpponentGame.this, UserGame.class);
                             startActivity(intent);
@@ -87,40 +87,40 @@ public class OpponentGame extends AppCompatActivity {
                                 grid.setImageArray(position, R.drawable.destroyer_sunk);
 
                                 Analysis.hitCounter++;
-                                hitCounter.setText("Hit Counter: " + Analysis.hitCounter);
-                                hitRate.setText("Hit Rate: " + Analysis.getHitRate());
+                                hitCounter.setText(getString(R.string.hit) + Analysis.hitCounter);
+                                hitRate.setText(getString(R.string.hit_rate) + Analysis.getHitRate());
 
                                 autofillWaterSunk(1);
                             } else if (number == -2) {
                                 grid.setImageArray(position, R.drawable.submarine_sunk);
 
                                 Analysis.hitCounter++;
-                                hitCounter.setText("Hit Counter: " + Analysis.hitCounter);
-                                hitRate.setText("Hit Rate: " + Analysis.getHitRate());
+                                hitCounter.setText(getString(R.string.hit) + Analysis.hitCounter);
+                                hitRate.setText(getString(R.string.hit_rate) + Analysis.getHitRate());
 
                                 autofillWaterSunk(2);
                             } else if (number == -3) {
                                 grid.setImageArray(position, R.drawable.cruiser_sunk);
 
                                 Analysis.hitCounter++;
-                                hitCounter.setText("Hit Counter: " + Analysis.hitCounter);
-                                hitRate.setText("Hit Rate: " + Analysis.getHitRate());
+                                hitCounter.setText(getString(R.string.hit) + Analysis.hitCounter);
+                                hitRate.setText(getString(R.string.hit_rate) + Analysis.getHitRate());
 
                                 autofillWaterSunk(3);
                             } else if (number == -4) {
                                 grid.setImageArray(position, R.drawable.battleship_sunk);
 
                                 Analysis.hitCounter++;
-                                hitCounter.setText("Hit Counter: " + Analysis.hitCounter);
-                                hitRate.setText("Hit Rate: " + Analysis.getHitRate());
+                                hitCounter.setText(getString(R.string.hit) + Analysis.hitCounter);
+                                hitRate.setText(getString(R.string.hit_rate) + Analysis.getHitRate());
 
                                 autofillWaterSunk(4);
                             } else if (number == -5) {
                                 grid.setImageArray(position, R.drawable.carrier_sunk);
 
                                 Analysis.hitCounter++;
-                                hitCounter.setText("Hit Counter: " + Analysis.hitCounter);
-                                hitRate.setText("Hit Rate: " + Analysis.getHitRate());
+                                hitCounter.setText(getString(R.string.hit) + Analysis.hitCounter);
+                                hitRate.setText(getString(R.string.hit_rate) + Analysis.getHitRate());
 
                                 autofillWaterSunk(5);
                             }

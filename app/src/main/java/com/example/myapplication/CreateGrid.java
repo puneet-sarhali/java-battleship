@@ -1,9 +1,11 @@
 package com.example.myapplication;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -39,6 +41,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
 
     final CreateGridDialog loadingDialog=new CreateGridDialog(com.example.myapplication.CreateGrid.this);
 
+    //instances of the ships
     Carrier carrier = new Carrier("Carrier", ShipCondition.UNDAMAGED,R.id.carrier);
     Battleship battleship = new Battleship("Battleship",ShipCondition.UNDAMAGED, R.id.battleship);
     Cruiser cruiser = new Cruiser("Cruiser", ShipCondition.UNDAMAGED,R.id.cruiser );
@@ -149,11 +152,12 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
 
     }
 
-
+    //checks whether all 5 ships have been placed on the board
     public void checkReady(){
         if(ship_placed >= 5){
             Button btn = (Button) findViewById(R.id.rotation);
-            btn.setText("Ready");
+            btn.setText(getString(R.string.ready));
+            btn.setBackgroundColor(getResources().getColor(R.color.colorAccent));
         }
     }
 
@@ -182,6 +186,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
         }
     }
 
+    //autofill ship placement
     public boolean fillAdjacent(int position, imageAdapter adapter, int shipSize, int drawable){
 
         //Horitontal ship placement
