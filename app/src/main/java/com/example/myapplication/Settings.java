@@ -44,29 +44,34 @@ public class Settings extends AppCompatActivity {
             SharedPreferences settings =
                     getSharedPreferences("com.example.myapplication", Context.MODE_PRIVATE);
 
-            // Get the font size option.  We use "FONT_SIZE" as the key.
-            // Make sure to use this key when you set the value in SharedPreferences.
-            // We specify "Medium" as the default value, if it does not exist.
+            // Get the font size from sharedpreferences, set default to medium if key invalid
             String fontSizePref = settings.getString("FONT_SIZE", "Medium");
             Log.d("fontpref", fontSizePref);
 
             String rotationPref = settings.getString("AUTO_ROTATE", "False");
 
-            // Select the proper theme ID.
-            // These will correspond to your theme names as defined in themes.xml.
+            // Retrieve corresponding scale factor
             float textScale = 1.0f;
             TypedValue outValue = new TypedValue();
-            if (fontSizePref == "Small") {
+            if (fontSizePref.equals("Small")) {
                 getResources().getValue(R.dimen.FontSizeSmall, outValue, true);
                 textScale = outValue.getFloat();
-            } else if (fontSizePref == "Large") {
+            } else if (fontSizePref.equals("Large")) {
                 getResources().getValue(R.dimen.FontSizeLarge, outValue, true);
                 textScale = outValue.getFloat();
             }
 
-            boolean rotation = false;
-            if (rotationPref == "True") {
-                rotation = true;
+            rotateSwitch = (Switch) findViewById(R.id.rotateSwitch);
+            Log.d("rotation",rotationPref);
+            if (rotationPref.equals("True")) {
+                Log.d("switch:","on");
+                rotateSwitch.setChecked(true);
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+            }
+            else{
+                Log.d("switch:","off");
+                rotateSwitch.setChecked(false);
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             }
 
 
@@ -86,10 +91,6 @@ public class Settings extends AppCompatActivity {
             largeButton.setTextSize(Converter.convertPixelsToDp(largeButton.getTextSize(), this) * textScale);
             Log.d("size", String.valueOf(Converter.convertPixelsToDp(settingsTitle.getTextSize(), this)));
 
-            rotateSwitch = (Switch) findViewById(R.id.rotateSwitch);
-            if (rotation == true) {
-                rotateSwitch.setChecked(true);
-            }
 
         } catch (Exception ex) {
             ex.printStackTrace();

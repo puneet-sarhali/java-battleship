@@ -72,48 +72,25 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        // shahmat's code
         editText=(EditText) findViewById(R.id.edittext);
         playButton=(Button) findViewById(R.id.playButton1);
         settingsButton =(ImageButton) findViewById(R.id.exitButton);
         titleText = (TextView) findViewById(R.id.titleText) ;
 
         //Apply settings
-
-        try {
-            // Get the font size value from SharedPreferences.
-            SharedPreferences settings =
-                    getSharedPreferences("com.example.myapplication", Context.MODE_PRIVATE);
-
-            // Get the font size option.  We use "FONT_SIZE" as the key.
-            // Make sure to use this key when you set the value in SharedPreferences.
-            // We specify "Medium" as the default value, if it does not exist.
-            String fontSizePref = settings.getString("FONT_SIZE", "Medium");
-            Log.d("fontpref",fontSizePref);
-
-            // Select the proper values inside resource files
-            float textScale = 1.0f;
-            TypedValue outValue = new TypedValue();
-            if (fontSizePref == "Small") {
-                getResources().getValue(R.dimen.FontSizeSmall,outValue,true);
-                textScale = outValue.getFloat();
-            } else if (fontSizePref == "Large") {
-                getResources().getValue(R.dimen.FontSizeLarge,outValue,true);
-                textScale = outValue.getFloat();
-            }
-
-            // Set the size of texts
-            Log.d("scale",String.valueOf(textScale));
-            titleText.setTextSize(Converter.convertPixelsToDp(titleText.getTextSize(),this)*textScale);
-            editText.setTextSize(Converter.convertPixelsToDp(editText.getTextSize(),this)*textScale);
-            playButton.setTextSize(Converter.convertPixelsToDp(playButton.getTextSize(),this)*textScale);
-
-            //Set screen rotation
-            //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        SettingsHelper s = new SettingsHelper(this);
+        //text scale settings
+        titleText.setTextSize(Converter.convertPixelsToDp(titleText.getTextSize(),this)*s.getTextScale());
+        editText.setTextSize(Converter.convertPixelsToDp(editText.getTextSize(),this)*s.getTextScale());
+        playButton.setTextSize(Converter.convertPixelsToDp(playButton.getTextSize(),this)*s.getTextScale());
+        //rotation settings
+        if(s.getRotationSetting()){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+        }else{
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
+
+
 
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
