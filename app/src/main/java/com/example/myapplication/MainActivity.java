@@ -95,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
                     // If user UID is not in the database, create one
                     if (!condition){
                         FirebaseDatabase.getInstance().getReference("Name").child(currentUser.getUid()).setValue("Name");
-                        editText.setText("Name");
                     }
 
 
@@ -138,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    // upon activity creation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -153,10 +153,11 @@ public class MainActivity extends AppCompatActivity {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // if the edit text length is 0, return an error message
                 if(editText.getText().toString().length()==0) {
                     Toast.makeText(MainActivity.this, "Please enter a name", Toast.LENGTH_LONG).show();
                 }
-                // it will take to the next activity
+                // if the edit text has viable length, go to the next activity
                 else {
                     Intent intent=new Intent(MainActivity.this,UserwaitingActivity.class);
                     value = editText.getText().toString(); //to get the name
@@ -164,18 +165,16 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("username", value);
                     startActivity(intent);
                     finish();
-
                 }
             }
         });
-
     }
 
     @Override
+    // upon activity start
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
     }

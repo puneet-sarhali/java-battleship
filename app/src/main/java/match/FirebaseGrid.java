@@ -9,19 +9,27 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+// the class stores all the grid info for both players
 public class FirebaseGrid {
+    // the callback interface that will be called when finishing setting the data in the database
     public interface OnSuccessSettingCallBack {
+        // upon successfully setting the data
         void onSuccess(int number, int row, int column);
     }
 
+    // the callback interface that will be called when finishing reading the data in the database
     public interface OnSuccessReadingCallBack {
+        // upon successfully reading the data
         void onSuccess(int row, int column);
     }
 
-    // a database reference to the user grid and enemy's grid
-    // 0 means bomb shreds, 1 means destroyer
-    // 2 means submarine, 3 means cruiser
-    // 4 means battleship, 5 means carrier, 6 means water
+    /** a database reference to the user grid and enemy's grid
+    *  0 means bomb shreds, 1 means destroyer
+    *  2 means submarine, 3 means cruiser
+    *  4 means battleship, 5 means carrier, 6 means water
+    * -1 means damaged destroyer, -2 means damaged submarine
+    * -3 means damaged cruiser, -4 means damaged battleship
+    */
     static public int[][] hostGrid = new int[8][8];
     static public int[][] playerGrid = new int[8][8];
     static public int[][] currentGrid = new int[8][8];
