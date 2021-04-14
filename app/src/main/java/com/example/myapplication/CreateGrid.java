@@ -45,7 +45,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
     boolean carrierPressed = false, battleshipPressed = false, cruiserPressed = false, submarinePressed = false, destroyerPressed = false;
     int clickCountCarrier = 0, clickCountBattleship = 0, clickCountCruiser = 0,clickCountSubmarine = 0,clickCountDestroyer = 0;
 
-    final LoadingDialog loadingDialog=new LoadingDialog(com.example.myapplication.CreateGrid.this);
+    final CreateGridDialog loadingDialog=new CreateGridDialog(  com.example.myapplication.CreateGrid.this);
 
     //instances of the ships
     Carrier carrier = new Carrier("Carrier", ShipCondition.UNDAMAGED,R.id.carrier);
@@ -184,6 +184,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
             Button btn = (Button) findViewById(R.id.rotation);
             btn.setText(getString(R.string.ready));
             btn.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+            btn.setTextSize(24);
         }
     }
 
