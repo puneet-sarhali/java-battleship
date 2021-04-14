@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Battleship</string>
     <string name="gameName">BATTLESHIP</string>
     <string name="userName">enter your name</string>
     <string name="playButtonText">Next</string>
