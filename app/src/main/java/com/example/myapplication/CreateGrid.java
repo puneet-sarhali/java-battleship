@@ -158,6 +158,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
     }
 
     // check the position of the grid, i means position
+    // the ships must be 1 tile away from one another
     public boolean checkPosition(int i, imageAdapter adapter){
         if(adapter.isOccupied(i)) {
             return true;
@@ -201,6 +202,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                 if(validPosition){
                     for (int i = startIndex; i >= startIndex - shipSize + 1; i--) {
                         adapter.setImageArray(i, drawable);
+                        // set the grid
                         FirebaseGrid.setCurrentGrid(shipSize, i);
                     }
                     return true;
@@ -279,15 +281,18 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
     //defines the onClick functionality of the ship buttons
     @Override
     public void onClick(View v) {
+        // if all the ships are placed, run this
         if(ship_placed>=5){
 
+            // creates a loading dialog that tells the player to be ready for the opponent
             loadingDialog.customDialog();
             loadingDialog.dismiss();
 
+            // get the database reference for both the user and the opponent to see if they are ready
             DatabaseReference userReference = FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(FirebaseGame.currentUID).child("isReady");;
             DatabaseReference opponentReference = FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(FirebaseGame.opponentUID).child("isReady");
 
-
+            // the user is ready
             Ready ready = new Ready(userReference, opponentReference, new Ready.ReadyMatchComplete() {
                 @Override
                 public void run() {

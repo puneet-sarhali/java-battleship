@@ -82,7 +82,7 @@ public class Ready {
         mReadyMatchComplete.run();
     }
 
-    // initialize the ready event if the other
+    // initialize the ready event if the other isn't ready
     public class ReadyInitializer implements Transaction.Handler, ValueEventListener {
 
         // default constructor
@@ -92,6 +92,7 @@ public class Ready {
         @NonNull
         @Override
         public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+            // set the user to be ready while waiting for the opponent to be ready
             userIsReadyReference.setValue(true);
             opponentIsReadyReference.addValueEventListener(this);
 
@@ -104,6 +105,7 @@ public class Ready {
 
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
+            // if the opponent is ready, both players get ready
             if (snapshot.getValue().equals(true)) {
                 onReady();
                 opponentIsReadyReference.removeEventListener(this);
@@ -116,6 +118,7 @@ public class Ready {
         }
     }
 
+    // get ready for the match
     public class ReadyMatch implements Transaction.Handler{
 
         ReadyMatchFail mReadyMatchFail;

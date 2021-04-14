@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+// the main menu of the game
 public class MainActivity extends AppCompatActivity {
 
     EditText editText;
@@ -160,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
                 // if the edit text has viable length, go to the next activity
                 else {
                     Intent intent=new Intent(MainActivity.this,UserwaitingActivity.class);
+                    // push the name to firebase database
                     value = editText.getText().toString(); //to get the name
                     FirebaseDatabase.getInstance().getReference("Name").child(mAuth.getCurrentUser().getUid()).setValue(value);
                     intent.putExtra("username", value);
