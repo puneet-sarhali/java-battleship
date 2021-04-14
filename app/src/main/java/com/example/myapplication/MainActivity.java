@@ -30,9 +30,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+// the main menu of the game
 public class MainActivity extends AppCompatActivity {
 
-    // Shahmat's code
     EditText editText;
     Button playButton;
     ImageButton settingsButton;
@@ -60,19 +60,17 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         // run the method upon completion signs in
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            /*
-                            Sign in success, update UI with the signed-in user's information
-                             */
+
+                            // Sign in success, update UI with the signed-in user's information
                             if (task.isSuccessful()) {
 
 
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 updateUI(user);
                             }
-                            /*
-                            Sign in failure, try sign in the user again
-                            Display a sign in failure message to the user.
-                             */
+
+                            // Sign in failure, try sign in the user again
+                            // Display a sign in failure message to the user.
                             else {
                                 Toast.makeText(MainActivity.this, "Authentication failed.",
                                         Toast.LENGTH_SHORT).show();
@@ -81,9 +79,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
         }
-        /*
-        User signs in anonymously successfully! proceed to next step
-         */
+
+        // User signs in anonymously successfully! proceed to next step
         else
         {
             /*
@@ -94,35 +91,29 @@ public class MainActivity extends AppCompatActivity {
              */
             FirebaseDatabase.getInstance().getReference("Name").addValueEventListener(new ValueEventListener() {
                 @Override
-                /*
-                once initialized the listener, run this method
-                 */
+
+                // once initialized the listener, run this method
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    /*
-                    Check the user's UID in the "Name" node in database
-                     */
+
+                    // Check the user's UID in the "Name" node in database
                     boolean condition = false;
                     for (DataSnapshot data : snapshot.getChildren()){
                         if (data.getKey().equals(currentUser.getUid())){
                             condition = true;
                         }
                     }
-                    /*
-                    If user UID is not in the database, create one
-                     */
+
+                    // If user UID is not in the database, create one
                     if (!condition){
-                        FirebaseDatabase.getInstance().getReference("Name").child(mAuth.getCurrentUser().getUid()).setValue("Name");
+                        FirebaseDatabase.getInstance().getReference("Name").child(currentUser.getUid()).setValue("Name");
                     }
 
-                    /*
-                    remove the event listener once finished reading data
-                     */
+
+                    // remove the event listener once finished reading data
                     FirebaseDatabase.getInstance().getReference("Name").removeEventListener(this);
                 }
 
-                /*
-                display an error message if reading data failed
-                 */
+                // display an error message if reading data failed
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
                     Toast.makeText(MainActivity.this, "Failing getting UID", Toast.LENGTH_SHORT).show();
@@ -134,8 +125,8 @@ public class MainActivity extends AppCompatActivity {
             Set the edit text name to the user name in the database
              */
             FirebaseDatabase.getInstance().getReference("Name").child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
-                @Override
 
+                @Override
                 // run this method upon initialization of the listener
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
 
@@ -147,9 +138,10 @@ public class MainActivity extends AppCompatActivity {
                     FirebaseDatabase.getInstance().getReference("Name").child(currentUser.getUid()).removeEventListener(this);
                 }
 
+                // display error message when event listener failed
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-
+                    Toast.makeText(MainActivity.this, "Failing getting user name", Toast.LENGTH_SHORT).show();
                 }
 
             });
@@ -157,15 +149,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    // upon activity creation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
 
 
+        // initiate the authentication object
         mAuth = FirebaseAuth.getInstance();
 
-        // shahmat's code
+        // assign the view by id
         editText=(EditText) findViewById(R.id.edittext);
         playButton=(Button) findViewById(R.id.playButton1);
         settingsButton =(ImageButton) findViewById(R.id.exitButton);
@@ -189,18 +183,19 @@ public class MainActivity extends AppCompatActivity {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // if the edit text length is 0, return an error message
                 if(editText.getText().toString().length()==0) {
                     Toast.makeText(MainActivity.this, "Please enter a name", Toast.LENGTH_LONG).show();
                 }
-                // it will take to the next activity
+                // if the edit text has viable length, go to the next activity
                 else {
                     Intent intent=new Intent(MainActivity.this,UserwaitingActivity.class);
+                    // push the name to firebase database
                     value = editText.getText().toString(); //to get the name
                     FirebaseDatabase.getInstance().getReference("Name").child(mAuth.getCurrentUser().getUid()).setValue(value);
                     intent.putExtra("username", value);
                     startActivity(intent);
                     finish();
-
                 }
             }
         });
@@ -212,14 +207,13 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-
     }
 
     @Override
+    // upon activity start
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
     }

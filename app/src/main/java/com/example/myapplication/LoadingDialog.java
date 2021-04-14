@@ -9,15 +9,19 @@ import org.w3c.dom.Text;
 
 import match.FirebaseGame;
 
+// a loading dialog that displays in the UserwaitingActivity
 public class LoadingDialog {
+
 
     private Activity activity;
     private AlertDialog alertDialog;
 
+    // parameterized constructor
     LoadingDialog(Activity myActivity){
         activity=myActivity;
     }
 
+    // create a custom dialog
     void customDialog(){
 
         AlertDialog.Builder builder=new AlertDialog.Builder(activity);
@@ -30,6 +34,7 @@ public class LoadingDialog {
         builder.show();
     }
 
+    // dismiss the custom dialog
     void dismiss(){
         alertDialog.dismiss();
     }

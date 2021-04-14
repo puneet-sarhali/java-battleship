@@ -9,18 +9,22 @@ public class Match {
     // reference to the game
     private String gameReference;
 
+    // get the host of the game
     public String getHost() {
         return host;
     }
 
+    // set the host in the game
     public void setHost(String host) {
         this.host = host;
     }
 
+    // set the game path
     public void setGameReference(String gameReference) {
         this.gameReference = gameReference;
     }
 
+    // get the game path
     public String getGameReference() {
         return gameReference;
     }
