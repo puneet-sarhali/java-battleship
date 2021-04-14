@@ -3,38 +3,33 @@ package com.example.myapplication;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.view.LayoutInflater;
-import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import match.FirebaseGame;
-
-// a loading dialog that displays in the UserwaitingActivity
-public class LoadingDialog {
-
-
+// the dialog only appears in the create grid activity
+public class CreateGridDialog {
     private Activity activity;
     private AlertDialog alertDialog;
 
-    // parameterized constructor
-    LoadingDialog(Activity myActivity){
+    // a parameterized constructor
+    CreateGridDialog(Activity myActivity){
         activity=myActivity;
     }
 
     // create a custom dialog
     void customDialog(){
 
+        // builds the alert dialog
         AlertDialog.Builder builder=new AlertDialog.Builder(activity);
 
         LayoutInflater layoutInflater=activity.getLayoutInflater();
-        builder.setView(layoutInflater.inflate(R.layout.custom_dialog, null));
+        builder.setView(layoutInflater.inflate(R.layout.activity_create_grid_dialog, null));
         builder.setCancelable(false);
 
+        // create and show the dialog
         alertDialog=builder.create();
         builder.show();
     }
 
-    // dismiss the custom dialog
+    // dismiss the dialog
     void dismiss(){
         alertDialog.dismiss();
     }

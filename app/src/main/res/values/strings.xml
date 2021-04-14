@@ -1,12 +1,17 @@
 <resources>
     <string name="app_name">My Application</string>
     <string name="gameName">BATTLESHIP</string>
-    <string name="userName">Name</string>
-    <string name="playButtonText">PLAY !</string>
-    <string name="waitingroomText">Let us play</string>
+    <string name="userName">enter your name</string>
+    <string name="playButtonText">Next</string>
+    <string name="waitingroomText">Let\'s play</string>
+    <string name="settingsName">Settings</string>
+    <string name="smallText">Small</string>
+    <string name="mediumText">Medium</string>
+    <string name="largeText">Large</string>
     <string name="quickmatchtext">Quick Match</string>
     <string name="showusernameText">User name:</string>
     <string name="doneBtnText">Done</string>
+    <string name="ready">I\'m Ready</string>
     <string name="joinRoomEditTextHint">Type the room name </string>
     <string name="createRoomEditTextHint">Type the room name </string>
     <string name="carrier">Carrier</string>
@@ -15,4 +20,33 @@
     <string name="submarine">Submarine</string>
     <string name="destroyer">Destroyer</string>
     <string name="helpText">Draw the ships on the game board!</string>
+    <string name="rotate">Horizontal</string>
+    <string name="title_activity_winning_page">WinningPage</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="miss">Miss: </string>
+    <string name="hit">Hit: </string>
+    <string name="hit_rate">Hit Rate: </string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 </resources>
