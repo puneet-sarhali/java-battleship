@@ -1,55 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
+
+
     android:background="@drawable/gamebackground"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity">
 
 
     <ImageButton
 
+        android:id="@+id/exitButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:src="@drawable/setting_lines"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="70pt"
         android:layout_marginBottom="20pt"
         android:rotationX="-11"
         android:text="@string/gameName"
-        android:textColor="#4263f5"
+        android:textColor="#457B9D"
         android:textSize="50dp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/edittext"
-        android:background="#FFFFFF"
-        android:textColor="#000000"
-        android:textColorHint="#000000"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/userName"
-        android:textSize="30dp"
         android:maxLength="15"
-        />
+        android:textColor="#000000"
+        android:textColorHighlight="#3347F2"
+        android:textColorHint="#676767"
+        android:textColorLink="#3347F2"
+        android:textSize="30dp"
+        android:textStyle="italic"
+
+        app:layout_constraintBottom_toTopOf="@+id/playButton1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline3" />
 
     <Button
         android:id="@+id/playButton1"
-        android:layout_marginTop="20pt"
         android:layout_width="wrap_content"
-        android:text="@string/playButtonText"
-        android:textSize="30dp"
-        android:textColor="@color/common_google_signin_btn_text_dark"
         android:layout_height="wrap_content"
-        android:backgroundTint="#4263f5"
-        />
+        android:backgroundTint="#e63946"
+        android:text="@string/playButtonText"
+        android:textColor="@color/common_google_signin_btn_text_dark"
+        android:textSize="30dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edittext" />
 
-</LinearLayout>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="399dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="560dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

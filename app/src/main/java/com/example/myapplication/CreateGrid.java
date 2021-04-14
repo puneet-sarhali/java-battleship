@@ -1,15 +1,23 @@
 package com.example.myapplication;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.RadioButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,8 +45,9 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
     boolean carrierPressed = false, battleshipPressed = false, cruiserPressed = false, submarinePressed = false, destroyerPressed = false;
     int clickCountCarrier = 0, clickCountBattleship = 0, clickCountCruiser = 0,clickCountSubmarine = 0,clickCountDestroyer = 0;
 
-    final CreateGridDialog loadingDialog=new CreateGridDialog(com.example.myapplication.CreateGrid.this);
+    final CreateGridDialog loadingDialog=new CreateGridDialog(  com.example.myapplication.CreateGrid.this);
 
+    //instances of the ships
     Carrier carrier = new Carrier("Carrier", ShipCondition.UNDAMAGED,R.id.carrier);
     Battleship battleship = new Battleship("Battleship",ShipCondition.UNDAMAGED, R.id.battleship);
     Cruiser cruiser = new Cruiser("Cruiser", ShipCondition.UNDAMAGED,R.id.cruiser );
@@ -53,13 +62,33 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
         setContentView(R.layout.place_ship);
         getSupportActionBar().hide();
 
-        //initializations of button views
+
+
+        //initializations of button and text views
         Button carrierButton = findViewById(carrier.getShipImageID());
         Button battleshipButton = findViewById(battleship.getShipImageID());
         Button cruiserButton = findViewById(cruiser.getShipImageID());
         Button submarineButton = findViewById(submarine.getShipImageID());
         Button destroyerButton = findViewById(destroyer.getShipImageID());
         Button rotate = findViewById(R.id.rotation);
+        TextView helpText = findViewById(R.id.helpText);
+
+        //Apply settings
+        SettingsHelper s = new SettingsHelper(this);
+        //text scale settings
+        carrierButton.setTextSize(Converter.convertPixelsToDp(carrierButton.getTextSize(),this)*s.getTextScale());
+        battleshipButton.setTextSize(Converter.convertPixelsToDp(battleshipButton.getTextSize(),this)*s.getTextScale());
+        cruiserButton.setTextSize(Converter.convertPixelsToDp(cruiserButton.getTextSize(),this)*s.getTextScale());
+        submarineButton.setTextSize(Converter.convertPixelsToDp(submarineButton.getTextSize(),this)*s.getTextScale());
+        destroyerButton.setTextSize(Converter.convertPixelsToDp(destroyerButton.getTextSize(),this)*s.getTextScale());
+        rotate.setTextSize(Converter.convertPixelsToDp(rotate.getTextSize(),this)*s.getTextScale());
+        helpText.setTextSize(Converter.convertPixelsToDp(rotate.getTextSize(),this)*s.getTextScale());
+        //rotation settings
+        if(s.getRotationSetting()){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+        }else{
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
 
 
 
@@ -149,15 +178,18 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
 
     }
 
-
+    //checks whether all 5 ships have been placed on the board
     public void checkReady(){
         if(ship_placed >= 5){
             Button btn = (Button) findViewById(R.id.rotation);
-            btn.setText("Ready");
+            btn.setText(getString(R.string.ready));
+            btn.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+            btn.setTextSize(24);
         }
     }
 
     // check the position of the grid, i means position
+    // the ships must be 1 tile away from one another
     public boolean checkPosition(int i, imageAdapter adapter){
         if(adapter.isOccupied(i)) {
             return true;
@@ -182,6 +214,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
         }
     }
 
+    //autofill ship placement
     public boolean fillAdjacent(int position, imageAdapter adapter, int shipSize, int drawable){
 
         //Horitontal ship placement
@@ -201,6 +234,7 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
                 if(validPosition){
                     for (int i = startIndex; i >= startIndex - shipSize + 1; i--) {
                         adapter.setImageArray(i, drawable);
+                        // set the grid
                         FirebaseGrid.setCurrentGrid(shipSize, i);
                     }
                     return true;
@@ -279,15 +313,18 @@ public class CreateGrid extends AppCompatActivity implements View.OnClickListene
     //defines the onClick functionality of the ship buttons
     @Override
     public void onClick(View v) {
+        // if all the ships are placed, run this
         if(ship_placed>=5){
 
+            // creates a loading dialog that tells the player to be ready for the opponent
             loadingDialog.customDialog();
             loadingDialog.dismiss();
 
+            // get the database reference for both the user and the opponent to see if they are ready
             DatabaseReference userReference = FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(FirebaseGame.currentUID).child("isReady");;
             DatabaseReference opponentReference = FirebaseDatabase.getInstance().getReference(FirebaseGame.gameReference).child(FirebaseGame.opponentUID).child("isReady");
 
-
+            // the user is ready
             Ready ready = new Ready(userReference, opponentReference, new Ready.ReadyMatchComplete() {
                 @Override
                 public void run() {
